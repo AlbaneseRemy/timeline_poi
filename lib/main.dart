@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),
     ];
 
-    tours.sort((a, b) => a.endYear.compareTo(b.endYear));
+    tours.sort((a, b) => a.startYear.compareTo(b.startYear));
     setColumnIds(tours);
   }
 
