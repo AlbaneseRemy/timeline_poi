@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'package:timeline_poi/timeline_column.dart';
+import 'package:timeline_poi/timeline_item.dart';
 import 'package:timeline_poi/timeline_map.dart';
 
 import 'data/tour.dart';
@@ -15,7 +16,7 @@ class MyTimeline extends StatefulWidget {
   const MyTimeline({
     Key? key,
     required this.tours,
-    this.numberColumns = 4,
+    this.numberColumns = 5,
     this.startYear = -400,
     this.endYear = 2000,
   }) : super(key: key);
@@ -49,9 +50,6 @@ class _MyTimelineState extends State<MyTimeline> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Timeline"),
-        ),
         body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
           return Stack(
             children: [
@@ -68,7 +66,7 @@ class _MyTimelineState extends State<MyTimeline> {
                             color: Colors.black,
                           ),
                           for (int i = widget.startYear; i < widget.endYear; i += 100) createContainer(i, constraints),
-                          for (var tour in widget.tours) TimeColumn(
+                          for (var tour in widget.tours) TimelineItem(
                             tour: tour,
                             tours: widget.tours,
                             constraints: constraints,
@@ -89,6 +87,7 @@ class _MyTimelineState extends State<MyTimeline> {
                 constraints: constraints,
                 scrollController: scrollController,
                 totalYears: widget.startYear.abs() + widget.endYear.abs(),
+                tours: widget.tours,
               ),
               bottom: 0,)
             ],

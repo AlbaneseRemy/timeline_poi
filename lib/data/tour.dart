@@ -9,17 +9,18 @@ class Tour {
   final int startYear;
   final int endYear;
   final Color color;
-  int columnIndex = 0;
+  int columnId;
 
 
   Tour({
     required this.title,
     required this.id,
-    this.description,
-    this.imageUri,
     required this.startYear,
     required this.endYear,
+    this.description,
+    this.imageUri,
     this.color = Colors.blue,
+    this.columnId = 0,
   });
 
 

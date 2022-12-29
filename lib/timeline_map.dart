@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'data/tour.dart';
+
 class TimelineMap extends StatefulWidget {
   final ScrollController scrollController;
   final BoxConstraints constraints;
   final int totalYears;
+  final List<Tour>? tours;
 
-  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears}) : super(key: key);
+  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours}) : super(key: key);
 
   @override
   State<TimelineMap> createState() => _TimelineMapState();
@@ -53,6 +56,26 @@ class _TimelineMapState extends State<TimelineMap> {
         ),
         left: leftPosition(),
       ),
+      if(widget.tours != null)
+        for (var tour in widget.tours!)
+          Positioned(
+            top: getTopPosition(tour),
+            left: getLeftPosition(tour),
+            child: Draggable(
+              onDragUpdate: (details) {
+                updatePosition(details);
+              },
+              feedback: Container(),
+              child: Container(
+                width: getLength(tour),
+                height: widget.constraints.maxHeight/150,
+                decoration: BoxDecoration(
+                  color: tour.color.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
     ]);
   }
 
@@ -62,5 +85,15 @@ class _TimelineMapState extends State<TimelineMap> {
 
   void updatePosition(DragUpdateDetails details) {
     widget.scrollController.position.moveTo(widget.scrollController.offset + details.delta.dx * widget.totalYears / widget.constraints.maxWidth);
+  }
+
+  double getLength(Tour tour) {
+    return (((tour.endYear - tour.startYear) / widget.totalYears) * widget.constraints.maxWidth).toDouble();
+  }
+  double getLeftPosition(Tour tour){
+    return (tour.startYear / widget.totalYears * widget.constraints.maxWidth).toDouble() + (400 / widget.totalYears * widget.constraints.maxWidth).toDouble();
+  }
+  double getTopPosition(Tour tour){
+    return (tour.columnId * 10).toDouble();
   }
 }
