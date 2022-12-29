@@ -4,6 +4,7 @@ import 'package:timeline_poi/timeline_hints.dart';
 import 'package:timeline_poi/timeline_item.dart';
 import 'package:timeline_poi/timeline_map.dart';
 import 'data/tour.dart';
+import 'data/tour_hint.dart';
 
 class MyTimeline extends StatefulWidget {
   final List<Tour> tours;
@@ -75,8 +76,9 @@ class _MyTimelineState extends State<MyTimeline> {
                           startYear: widget.startYear,
                           endYear: widget.endYear,
                         ),
-                      for(var tour in widget.tours)
-                          if(tour.hints != null) for (var hint in tour.hints!) TimelineHint(hint: hint, startYear: widget.startYear, scrollController : scrollController)
+                      for (var tour in widget.tours)
+                        if (tour.hints != null)
+                          for (var hint in tour.hints!) TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController),
                     ],
                   ),
                 ],

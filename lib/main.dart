@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     hints = [
-      TourHint(year: 70, description: "The first hint"),
+      TourHint(year: 70, description: "Cet évènement est phénoménal, je ne peux pas y croire !"),
       //TourHint(year: 100, description: "The second hint"),
     ];
 
