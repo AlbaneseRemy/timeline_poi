@@ -5,6 +5,8 @@ import 'package:timeline_poi/timeline.dart';
 import 'package:timeline_poi/data/tour.dart';
 import 'package:collection/collection.dart';
 
+import 'Navigation.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -39,7 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     tours = [
-      Tour(title: "Tour numéro 1", id: "1", startYear: -150, endYear: 150, color: Colors.red, imageUri: "images/logoOrpheo.png"),
+      Tour(
+          title: "Tour numéro 1",
+          id: "1",
+          startYear: -150,
+          endYear: 150,
+          color: Colors.red,
+          imageUri: "images/logoOrpheo.png",
+          description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture"),
       Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
       Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
@@ -64,21 +73,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(onPressed: () => changeTour(), child: const Text('Try the timeline')),
+            ElevatedButton(
+                onPressed: () => Navigation.goTo(
+                    context,
+                    MyTimeline(
+                      tours: tours,
+                      numberColumns: maxColumn(tours),
+                    )),
+                child: const Text('Try the timeline')),
           ],
         ),
       ),
-    );
-  }
-
-  void changeTour() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MyTimeline(
-                tours: tours,
-                numberColumns: maxColumn(tours),
-              )),
     );
   }
 
