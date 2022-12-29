@@ -42,15 +42,16 @@ class TimelineItem extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   alignment: Alignment.center)
-              : Container(
-                  height: ((tour.startYear - startYear).toDouble() + constraints.maxHeight / 2) / 2,
-                  width: constraints.maxWidth / (numberColumns + 1),
+              :
+          //TODO : resize the image in a smaller version, and make it move with the page's scroll
+          Container(
+                  width: constraints.maxWidth / (numberColumns + 1) / 5,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      //image: Image.network(tour.imageUri!, fit: BoxFit.fill).image,
-                      image: Image.asset(tour.imageUri!, fit: BoxFit.scaleDown).image,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(100),
+                      image: DecorationImage(
+                        image: AssetImage(tour.imageUri!),
+                        fit: BoxFit.fitWidth,
+                      )),
                 ),
           decoration: BoxDecoration(
             color: tour.color,
@@ -69,7 +70,8 @@ class TimelineItem extends StatelessWidget {
     );
   }
 
+  //Determines on which column the item should be placed
   double leftPosition() {
-    return (tour.columnId +1) * constraints.maxWidth / (numberColumns + 1);
+    return (tour.columnId + 1) * constraints.maxWidth / (numberColumns + 1);
   }
 }

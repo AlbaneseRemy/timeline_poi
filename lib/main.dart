@@ -39,23 +39,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     tours = [
-      Tour(
-          title: "Tour numéro 1",
-          id: "1",
-          startYear: -150,
-          endYear: 150,
-          color: Colors.red,
-          imageUri: "images/logoOrpheo.png",//"https://images.unsplash.com/photo-1547721064-da6cfb341d50",
-          columnId: 0),
+      Tour(title: "Tour numéro 1", id: "1", startYear: -150, endYear: 150, color: Colors.red, imageUri: "images/logoOrpheo.png"),
       Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
       Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
-      Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue),
+      Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
       Tour(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
       Tour(title: "Tour numéro 7", id: "7", startYear: 540, endYear: 700, color: Colors.brown),
-      /*Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
+      Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
       Tour(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
-      Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),*/
+      Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),
     ];
 
     setColumnIds(tours);
@@ -89,32 +82,34 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
+  //Sorts the table by their startYear and sets the columnId so they don't overlap
   void setColumnIds(List<Tour> tours) {
     tours.sort((a, b) => a.startYear.compareTo(b.startYear));
-    for (int i = 0; i <= tours.length -1; i++) {
+    for (int i = 0; i <= tours.length - 1; i++) {
       int indexToSet = 0;
       List<Tour> concurrent = [];
       for (int k = 0; k <= i - 1; k++) {
+        //Look for concurrent tours (tours that will overlap)
         if (tours[k].endYear >= tours[i].startYear) {
           concurrent.add(tours[k]);
         }
       }
-      while(concurrent.firstWhereOrNull((element) => element.columnId == indexToSet) != null) {
+      //While there is a concurrent tour that has the same columnId, we increment the columnIndex
+      while (concurrent.firstWhereOrNull((element) => element.columnId == indexToSet) != null) {
         indexToSet++;
       }
       tours[i].columnId = indexToSet;
     }
   }
 
-  int maxColumn(List<Tour> tours){
+  //Look for the maximum columnId in the list of tours
+  int maxColumn(List<Tour> tours) {
     int maxColumnId = 0;
     for (int i = 0; i <= tours.length - 1; i++) {
       if (tours[i].columnId > maxColumnId) {
         maxColumnId = tours[i].columnId;
       }
     }
-    return maxColumnId +1;
+    return maxColumnId + 1;
   }
-
 }

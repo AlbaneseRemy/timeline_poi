@@ -9,7 +9,8 @@ class TimelineMap extends StatefulWidget {
   final int totalYears;
   final List<Tour>? tours;
 
-  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.columnNumber}) : super(key: key);
+  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.columnNumber})
+      : super(key: key);
 
   @override
   State<TimelineMap> createState() => _TimelineMapState();
@@ -57,7 +58,7 @@ class _TimelineMapState extends State<TimelineMap> {
         ),
         left: leftPosition(),
       ),
-      if(widget.tours != null)
+      if (widget.tours != null)
         for (var tour in widget.tours!)
           Positioned(
             top: getTopPosition(tour),
@@ -69,7 +70,7 @@ class _TimelineMapState extends State<TimelineMap> {
               feedback: Container(),
               child: Container(
                 width: getLength(tour),
-                height: widget.constraints.maxHeight/150,
+                height: widget.constraints.maxHeight / 150,
                 decoration: BoxDecoration(
                   color: tour.color.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(10),
@@ -80,21 +81,28 @@ class _TimelineMapState extends State<TimelineMap> {
     ]);
   }
 
+  //Moves the scroll offset of the page when the user drags the Container at the bottom of the screen
   void updatePosition(DragUpdateDetails details) {
     widget.scrollController.position.moveTo(widget.scrollController.offset + details.delta.dx * widget.totalYears / widget.constraints.maxWidth);
   }
 
+  //Sets the left position of the white frame that follows the user's finger
   double leftPosition() {
     return (widget.scrollController.offset / (widget.totalYears / widget.constraints.maxWidth)) - widget.constraints.maxWidth / 10;
   }
 
+  //Defines how long the tour's line is in the map
   double getLength(Tour tour) {
     return (((tour.endYear - tour.startYear) / widget.totalYears) * widget.constraints.maxWidth).toDouble();
   }
-  double getLeftPosition(Tour tour){
+
+  //Defines the left position of the tour's line in the map
+  double getLeftPosition(Tour tour) {
     return (tour.startYear / widget.totalYears * widget.constraints.maxWidth).toDouble() + (400 / widget.totalYears * widget.constraints.maxWidth).toDouble();
   }
-  double getTopPosition(Tour tour){
-    return (6 + (tour.columnId) * ((widget.constraints.maxHeight/10) / (widget.columnNumber)) .toDouble());
+
+  //Defines the top position of the tour's line in the map
+  double getTopPosition(Tour tour) {
+    return (6 + (tour.columnId) * ((widget.constraints.maxHeight / 10) / (widget.columnNumber)).toDouble());
   }
 }
