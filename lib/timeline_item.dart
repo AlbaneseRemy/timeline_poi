@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:timeline_poi/timeline_info.dart';
+import 'Navigation.dart';
 import 'data/tour.dart';
 
 class TimelineItem extends StatelessWidget {
@@ -29,41 +31,44 @@ class TimelineItem extends StatelessWidget {
       left: leftPosition(),
       width: constraints.maxWidth / (numberColumns + 1),
       height: (tour.endYear - tour.startYear).toDouble(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Container(
-          child: tour.imageUri == null
-              ? Align(
-                  child: Text(
-                    tour.title,
-                    style: const TextStyle(
-                      fontSize: 10,
+      child: GestureDetector(
+        onTap: () => Navigation.goTo(context, TimelineInfo(tour: tour)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Container(
+            child: tour.imageUri == null
+                ? Align(
+                    child: Text(
+                      tour.title,
+                      style: const TextStyle(
+                        fontSize: 10,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
+                    alignment: Alignment.center)
+                :
+                //TODO : resize the image in a smaller version, and make it move with the page's scroll
+                Container(
+                    width: constraints.maxWidth / (numberColumns + 1) / 5,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        image: DecorationImage(
+                          image: AssetImage(tour.imageUri!),
+                          fit: BoxFit.fitWidth,
+                        )),
                   ),
-                  alignment: Alignment.center)
-              :
-          //TODO : resize the image in a smaller version, and make it move with the page's scroll
-          Container(
-                  width: constraints.maxWidth / (numberColumns + 1) / 5,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      image: DecorationImage(
-                        image: AssetImage(tour.imageUri!),
-                        fit: BoxFit.fitWidth,
-                      )),
+            decoration: BoxDecoration(
+              color: tour.color,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.4),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 3), // changes position of shadow
                 ),
-          decoration: BoxDecoration(
-            color: tour.color,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.4),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
