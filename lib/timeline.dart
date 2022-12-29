@@ -88,6 +88,7 @@ class _MyTimelineState extends State<MyTimeline> {
                 scrollController: scrollController,
                 totalYears: widget.startYear.abs() + widget.endYear.abs(),
                 tours: widget.tours,
+                columnNumber: widget.numberColumns,
               ),
               bottom: 0,)
             ],

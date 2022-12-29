@@ -47,7 +47,8 @@ class TimelineItem extends StatelessWidget {
                   width: constraints.maxWidth / (numberColumns + 1),
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: Image.network(tour.imageUri!, fit: BoxFit.fill).image,
+                      //image: Image.network(tour.imageUri!, fit: BoxFit.fill).image,
+                      image: Image.asset(tour.imageUri!, fit: BoxFit.scaleDown).image,
                     ),
                   ),
                 ),

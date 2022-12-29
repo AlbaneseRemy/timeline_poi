@@ -4,11 +4,12 @@ import 'data/tour.dart';
 
 class TimelineMap extends StatefulWidget {
   final ScrollController scrollController;
+  final int columnNumber;
   final BoxConstraints constraints;
   final int totalYears;
   final List<Tour>? tours;
 
-  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours}) : super(key: key);
+  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.columnNumber}) : super(key: key);
 
   @override
   State<TimelineMap> createState() => _TimelineMapState();
@@ -79,12 +80,12 @@ class _TimelineMapState extends State<TimelineMap> {
     ]);
   }
 
-  double leftPosition() {
-    return (widget.scrollController.offset / (widget.totalYears / widget.constraints.maxWidth)) - widget.constraints.maxWidth / 10;
-  }
-
   void updatePosition(DragUpdateDetails details) {
     widget.scrollController.position.moveTo(widget.scrollController.offset + details.delta.dx * widget.totalYears / widget.constraints.maxWidth);
+  }
+
+  double leftPosition() {
+    return (widget.scrollController.offset / (widget.totalYears / widget.constraints.maxWidth)) - widget.constraints.maxWidth / 10;
   }
 
   double getLength(Tour tour) {
@@ -94,6 +95,6 @@ class _TimelineMapState extends State<TimelineMap> {
     return (tour.startYear / widget.totalYears * widget.constraints.maxWidth).toDouble() + (400 / widget.totalYears * widget.constraints.maxWidth).toDouble();
   }
   double getTopPosition(Tour tour){
-    return (tour.columnId * 10).toDouble();
+    return (6 + (tour.columnId) * ((widget.constraints.maxHeight/10) / (widget.columnNumber)) .toDouble());
   }
 }
