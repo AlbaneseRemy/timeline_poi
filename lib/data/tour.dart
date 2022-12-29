@@ -23,16 +23,4 @@ class Tour {
     this.columnId = 0,
   });
 
-
-
-  String get getTitle => title;
-  String get getId => id;
-  String? get getDescription => description;
-  String? get getImageUri => imageUri;
-  int get getStartYear => startYear;
-  int get getEndYear => endYear;
-  Color get getColor => color;
-
-
-
 }

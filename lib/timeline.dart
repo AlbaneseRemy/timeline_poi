@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:timeline_poi/timeline_item.dart';
 import 'package:timeline_poi/timeline_map.dart';
-
 import 'data/tour.dart';
 
 class MyTimeline extends StatefulWidget {

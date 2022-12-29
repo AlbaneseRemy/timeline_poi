@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:timeline_poi/timeline.dart';
 import 'package:timeline_poi/data/tour.dart';

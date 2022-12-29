@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'data/tour.dart';
 
 class TimelineInfo extends StatefulWidget {
