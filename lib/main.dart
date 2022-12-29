@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timeline_poi/timeline.dart';
 import 'package:timeline_poi/data/tour.dart';
+import 'package:timeline_poi/data/tour_hint.dart';
 import 'package:collection/collection.dart';
 
 import 'Navigation.dart';
@@ -34,10 +35,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late List<Tour> tours;
+  late List<TourHint> hints;
 
   @override
   void initState() {
     super.initState();
+
+    hints = [
+      TourHint(year: 70, description: "The first hint"),
+      //TourHint(year: 100, description: "The second hint"),
+    ];
+
     tours = [
       Tour(
           title: "Tour numéro 1",
@@ -46,7 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
           endYear: 150,
           color: Colors.red,
           imageUri: "images/logoOrpheo.png",
-          description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture"),
+          description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture",
+          hints: hints),
       Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
       Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timeline_poi/data/tour_hint.dart';
 
 class Tour {
 
@@ -10,6 +11,7 @@ class Tour {
   final int endYear;
   final Color color;
   int columnId;
+  final List<TourHint>? hints;
 
 
   Tour({
@@ -21,6 +23,7 @@ class Tour {
     this.imageUri,
     this.color = Colors.blue,
     this.columnId = 0,
+    this.hints,
   });
 
 }

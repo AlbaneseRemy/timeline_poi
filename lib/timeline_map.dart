@@ -71,7 +71,7 @@ class _TimelineMapState extends State<TimelineMap> {
                 width: getLength(tour),
                 height: widget.constraints.maxHeight / 150,
                 decoration: BoxDecoration(
-                  color: tour.color.withOpacity(0.3),
+                  color: tour.color.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),

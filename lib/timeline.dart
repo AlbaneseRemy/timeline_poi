@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:timeline_poi/timeline_hints.dart';
 import 'package:timeline_poi/timeline_item.dart';
 import 'package:timeline_poi/timeline_map.dart';
 import 'data/tour.dart';
@@ -74,6 +75,8 @@ class _MyTimelineState extends State<MyTimeline> {
                           startYear: widget.startYear,
                           endYear: widget.endYear,
                         ),
+                      for(var tour in widget.tours)
+                          if(tour.hints != null) for (var hint in tour.hints!) TimelineHint(hint: hint, startYear: widget.startYear, scrollController : scrollController)
                     ],
                   ),
                 ],
