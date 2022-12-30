@@ -21,29 +21,15 @@ class _TimelineHintState extends State<TimelineHint> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        top: isHintVisible() ? (widget.scrollController.offset) + 50: (widget.hint.year.toDouble() + widget.startYear.abs() + 400).toDouble() + 12,
-        left: isHintVisible() ? widget.constraints.maxWidth / 2 -100: null,
+        top: (widget.hint.year.toDouble() + widget.startYear.abs() + 400).toDouble() + 12,
         child: Column(
           children: [
             isHintVisible() ? Icon(Icons.lightbulb, color: Colors.yellow, size: 25) : Icon(Icons.lightbulb_outline, color: Colors.white, size: 25),
-            isHintVisible()
-                ? Container(
-                    padding: EdgeInsets.all(8),
-                    color: Colors.white,
-                    width: 200,
-                    child: Align(
-                      child: Text(
-                        widget.hint.description,
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                : Container(),
           ],
         ));
   }
 
+  //Checks if the cursor is between the icon start and the icon end with icon size / 2 and scrollcontroller offset
   bool isHintVisible() {
     return widget.scrollController.offset <= (widget.hint.year.toDouble() + widget.startYear.abs()) + widget.iconSize / 2 &&
         widget.scrollController.offset >= (widget.hint.year.toDouble() + widget.startYear.abs()) - widget.iconSize / 2;

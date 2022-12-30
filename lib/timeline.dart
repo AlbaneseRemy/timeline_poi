@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:timeline_poi/timeline_hints.dart';
+import 'package:timeline_poi/timeline_hints_description.dart';
 import 'package:timeline_poi/timeline_item.dart';
 import 'package:timeline_poi/timeline_map.dart';
 import 'data/tour.dart';
@@ -66,7 +67,7 @@ class _MyTimelineState extends State<MyTimeline> {
                         width: constraints.maxWidth,
                         color: Colors.black,
                       ),
-                      for (int i = widget.startYear; i < widget.endYear; i += 100) createContainer(i, constraints),
+                      for (int i = widget.startYear; i <= widget.endYear; i += 100) createContainer(i, constraints),
                       for (var tour in widget.tours)
                         TimelineItem(
                           tour: tour,
@@ -78,7 +79,12 @@ class _MyTimelineState extends State<MyTimeline> {
                         ),
                       for (var tour in widget.tours)
                         if (tour.hints != null)
-                          for (var hint in tour.hints!) TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                          for (var hint in tour.hints!)
+                            TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                      for (var tour in widget.tours)
+                        if (tour.hints != null)
+                          for (var hint in tour.hints!)
+                            TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
                     ],
                   ),
                 ],

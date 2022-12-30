@@ -48,6 +48,7 @@ class _TimelineMapState extends State<TimelineMap> {
           axis: Axis.horizontal,
           feedback: Container(),
           child: Container(
+            //TODO: Make it so the box is the representation of what's displayed on the screen
             width: widget.constraints.maxWidth / 5,
             height: widget.constraints.maxHeight / 10,
             decoration: BoxDecoration(

@@ -43,7 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     hints = [
       TourHint(year: 0, description: "Cet évènement est phénoménal, je ne peux pas y croire !"),
-      //TourHint(year: 100, description: "The second hint"),
+      TourHint(year: 100, description: "The second hint"),
+      TourHint(year: 200, description: "The third hint"),
+      TourHint(year: 300, description: "The fourth hint"),
+      TourHint(year: 400, description: "The fifth hint"),
+      TourHint(year: 2001, description: "La naissance du roi"),
     ];
 
     tours = [
@@ -58,13 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
           hints: hints),
       Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
-      /*Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
+      Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
       Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
       Tour(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
       Tour(title: "Tour numéro 7", id: "7", startYear: 540, endYear: 700, color: Colors.brown),
       Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
       Tour(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
-      Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),*/
+      Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),
     ];
 
     setColumnIds(tours);
