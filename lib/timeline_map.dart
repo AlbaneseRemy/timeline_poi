@@ -6,9 +6,10 @@ class TimelineMap extends StatefulWidget {
   final int columnNumber;
   final BoxConstraints constraints;
   final int totalYears;
+  final int startYear;
   final List<Tour>? tours;
 
-  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.columnNumber})
+  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.columnNumber, required this.startYear})
       : super(key: key);
 
   @override
@@ -98,7 +99,8 @@ class _TimelineMapState extends State<TimelineMap> {
 
   //Defines the left position of the tour's line in the map
   double getLeftPosition(Tour tour) {
-    return (tour.startYear / widget.totalYears * widget.constraints.maxWidth).toDouble() + (400 / widget.totalYears * widget.constraints.maxWidth).toDouble();
+    //sets the left position according to all the parameters
+    return (((tour.startYear - widget.startYear) / widget.totalYears) * widget.constraints.maxWidth).toDouble();
   }
 
   //Defines the top position of the tour's line in the map

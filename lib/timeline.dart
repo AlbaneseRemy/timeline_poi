@@ -67,7 +67,8 @@ class _MyTimelineState extends State<MyTimeline> {
                         width: constraints.maxWidth,
                         color: Colors.black,
                       ),
-                      for (int i = widget.startYear; i <= widget.endYear; i += 100) createContainer(i, constraints),
+                      //for (int i = widget.startYear; i <= widget.endYear; i += 100) createContainer(i, constraints),
+                      for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) createContainer(i, constraints),
                       for (var tour in widget.tours)
                         TimelineItem(
                           tour: tour,
@@ -105,9 +106,10 @@ class _MyTimelineState extends State<MyTimeline> {
             child: TimelineMap(
               constraints: constraints,
               scrollController: scrollController,
-              totalYears: widget.startYear.abs() + widget.endYear.abs(),
+              totalYears: widget.endYear - widget.startYear,
               tours: widget.tours,
               columnNumber: widget.numberColumns,
+              startYear: widget.startYear,
             ),
             bottom: 0,
           )
@@ -119,11 +121,11 @@ class _MyTimelineState extends State<MyTimeline> {
   //Used to set the years in the timeline
   Widget createContainer(int i, BoxConstraints constraints) {
     return Positioned(
-        top: i + widget.startYear.abs() + constraints.maxHeight / 2,
+        top: i + constraints.maxHeight / 2,
         width: constraints.maxWidth / (widget.numberColumns + 1),
         child: Container(
           alignment: Alignment.center,
-          child: Text(i.toString(), style: const TextStyle(color: Colors.white)),
+          child: Text((i + widget.startYear).toString(), style: const TextStyle(color: Colors.white)),
         ));
   }
 
@@ -141,4 +143,9 @@ class _MyTimelineState extends State<MyTimeline> {
       dashGapRadius: 0.0,
     );
   }
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
 }

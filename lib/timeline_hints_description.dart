@@ -29,7 +29,8 @@ class _TimelineHintDescriptionState extends State<TimelineHintDescription> {
         padding: EdgeInsets.all(8),
         color: isHintVisible() ? Colors.white : Colors.transparent,
         width: 200,
-        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+        duration: Duration(milliseconds: 800),
         child: Align(
           child: Text(
             "Année ${widget.hint.year} : ${widget.hint.description}",
