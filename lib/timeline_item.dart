@@ -53,7 +53,7 @@ class TimelineItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                         image: DecorationImage(
                           image: AssetImage(tour.imageUri!),
-                          fit: BoxFit.fitWidth,
+                          fit: BoxFit.contain,
                         )),
                   ),
             decoration: BoxDecoration(

@@ -78,7 +78,7 @@ class _MyTimelineState extends State<MyTimeline> {
                         ),
                       for (var tour in widget.tours)
                         if (tour.hints != null)
-                          for (var hint in tour.hints!) TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController),
+                          for (var hint in tour.hints!) TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
                     ],
                   ),
                 ],
