@@ -22,9 +22,17 @@ class _TimelineHintState extends State<TimelineHint> {
   Widget build(BuildContext context) {
     return Positioned(
         top: (widget.hint.year.toDouble() + widget.startYear.abs() + 400).toDouble() + 12,
+        left: 35,
         child: Column(
           children: [
-            isHintVisible() ? Icon(Icons.lightbulb, color: Colors.yellow, size: 25) : Icon(Icons.lightbulb_outline, color: Colors.white, size: 25),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              width: isHintVisible() ? widget.iconSize.toDouble() * 1.1: widget.iconSize.toDouble() / 2,
+              curve: Curves.easeOut,
+              child: isHintVisible()
+                  ? Icon(Icons.lightbulb, color: Colors.yellow)
+                  : Icon(Icons.lightbulb_outline, color: Colors.white),
+            ),
           ],
         ));
   }

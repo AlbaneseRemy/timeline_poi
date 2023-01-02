@@ -3,13 +3,13 @@ import 'data/tour.dart';
 
 class TimelineMap extends StatefulWidget {
   final ScrollController scrollController;
-  final int columnNumber;
+  final int numberColumns;
   final BoxConstraints constraints;
   final int totalYears;
   final int startYear;
   final List<Tour>? tours;
 
-  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.columnNumber, required this.startYear})
+  const TimelineMap({Key? key, required this.scrollController, required this.constraints, required this.totalYears, this.tours, required this.numberColumns, required this.startYear})
       : super(key: key);
 
   @override
@@ -103,8 +103,8 @@ class _TimelineMapState extends State<TimelineMap> {
     return (((tour.startYear - widget.startYear) / widget.totalYears) * widget.constraints.maxWidth).toDouble();
   }
 
-  //Defines the top position of the tour's line in the map
   double getTopPosition(Tour tour) {
-    return (6 + (tour.columnId) * ((widget.constraints.maxHeight / 10) / (widget.columnNumber)).toDouble());
+    //Sets the position of the tour's line in the map. It should always be an equal distance between lines
+    return (widget.constraints.maxHeight / 10) / (widget.numberColumns + 1) * (tour.columnId + 1);
   }
 }

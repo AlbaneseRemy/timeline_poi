@@ -42,7 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     hints = [
-      TourHint(year: 0, description: "Cet évènement est phénoménal, je ne peux pas y croire !"),
+      TourHint(
+          year: 0,
+          description:
+              "Cet évènement est phénoménal, je ne peux pas y croire ! Le texte est particulièrement long pour voir comment réagit le widget. Aux premiers abords, il réagit relativement bien puisque sa taille augmente en fonction de la quantité de texte !"),
       TourHint(year: 100, description: "The second hint"),
       TourHint(year: 200, description: "The third hint"),
       TourHint(year: 300, description: "The fourth hint"),
@@ -59,8 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.red,
           imageUri: "images/logoOrpheo.png",
           description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture",
-          hints: hints),
-      Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
+          hints: null),
+      /*Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
       Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
       Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
@@ -69,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
       Tour(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
       Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),
+      Tour(title: "Tour numéro 11", id: "11", startYear: 49, endYear: 900, color: Colors.purple),*/
     ];
 
     setColumnIds(tours);
@@ -90,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MyTimeline(
                       tours: tours,
                       numberColumns: maxColumn(tours),
+                      isVertical: MediaQuery.of(context).orientation == Orientation.portrait ? true : false,
                     )),
                 child: const Text('Try the timeline')),
           ],

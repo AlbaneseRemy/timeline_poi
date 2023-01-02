@@ -24,13 +24,25 @@ class _TimelineHintDescriptionState extends State<TimelineHintDescription> {
   Widget build(BuildContext context) {
     return Positioned(
       top: widget.scrollController.offset + 50,
-      left: widget.constraints.maxWidth / 2 - 100,
+      left: widget.constraints.maxWidth / 2 - (widget.constraints.maxWidth*0.8)/2,
+
       child: AnimatedContainer(
         padding: EdgeInsets.all(8),
-        color: isHintVisible() ? Colors.white : Colors.transparent,
-        width: 200,
         curve: Curves.easeInOut,
+        width: widget.constraints.maxWidth * 0.8,
         duration: Duration(milliseconds: 800),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: isHintVisible() ? Colors.white : Colors.transparent, boxShadow: [
+          isHintVisible()
+              ? BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  blurRadius: 5.0,
+                  spreadRadius: 2.0,
+                  offset: const Offset(1.0, 0.0),
+                )
+              : BoxShadow(
+                  color: Colors.transparent,
+                )
+        ]),
         child: Align(
           child: Text(
             "Année ${widget.hint.year} : ${widget.hint.description}",
