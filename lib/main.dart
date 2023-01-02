@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           imageUri: "images/logoOrpheo.png",
           description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture",
           hints: null),
-      /*Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
+      Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
       Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
       Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
       Tour(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
       Tour(title: "Tour numéro 10", id: "10", startYear: 700, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 11", id: "11", startYear: 49, endYear: 900, color: Colors.purple),*/
+      Tour(title: "Tour numéro 11", id: "11", startYear: 49, endYear: 900, color: Colors.purple),
     ];
 
     setColumnIds(tours);

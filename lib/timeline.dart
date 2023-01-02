@@ -70,7 +70,7 @@ class _MyTimelineState extends State<MyTimeline> {
                     children: [
                       Container(
                         height: widget.isVertical ? (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxHeight : constraints.maxHeight,
-                        width: widget.isVertical ? constraints.maxWidth : (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxHeight,
+                        width: widget.isVertical ? constraints.maxWidth : (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxWidth,
                         color: Colors.black,
                       ),
                       for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) createContainer(i, constraints),
