@@ -126,6 +126,7 @@ class _MyTimelineState extends State<MyTimeline> {
               tours: widget.tours,
               numberColumns: widget.numberColumns,
               startYear: widget.startYear,
+              isVertical: widget.isVertical,
             ),
             bottom: 0,
           )
