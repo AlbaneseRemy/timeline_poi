@@ -77,7 +77,7 @@ class TimelineItem extends StatelessWidget {
   //Determines on which column the item should be placed
   double leftPosition() {
     if (numberColumns > 5) {
-      return isVertical? constraints.maxWidth / 6 * (tour.columnId + 1) - 30 : (constraints.maxHeight / 6 * (tour.columnId + 1) - 30);
+      return isVertical? constraints.maxWidth / 6 * (tour.columnId + 1) - 30 : (constraints.maxHeight / 6 * (tour.columnId + 1) - 40);
 
       /*(constraints.maxHeight) / (6) * (tour.columnId) +
           ((constraints.maxHeight / (numberColumns + 1)) / (numberColumns + 1)) +

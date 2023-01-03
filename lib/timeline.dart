@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/services.dart';
@@ -114,7 +115,7 @@ class _MyTimelineState extends State<MyTimeline> {
               textYear,
               style: TextStyle(color: Colors.white),
             ),
-            top: widget.isVertical ? constraints.maxHeight / 2 - 40 : constraints.maxHeight - constraints.maxHeight / 9 - 40,
+            top: widget.isVertical ? constraints.maxHeight / 2 - 40 : constraints.maxHeight  * 0.8 - 40,
             left: widget.isVertical ? constraints.maxWidth * 0.8 : constraints.maxWidth / 2 - 40,
           ),
           Positioned(
@@ -174,7 +175,7 @@ class _MyTimelineState extends State<MyTimeline> {
   double calculateHeight(BoxConstraints constraints) {
     return widget.isVertical
         ? (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxHeight
-        : (constraints.maxHeight / 5) * (widget.numberColumns - 1) + 50;
+        : kIsWeb ? (constraints.maxHeight / 5) * (widget.numberColumns - 1) + 150 : (constraints.maxHeight / 5) * (widget.numberColumns - 1) + 50;
   }
 
   void dispose() {
