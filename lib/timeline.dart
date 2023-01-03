@@ -29,8 +29,10 @@ class MyTimeline extends StatefulWidget {
 
 class _MyTimelineState extends State<MyTimeline> {
   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollControllerVertical = ScrollController();
   late int currentYear;
   late String textYear;
+  late double dateOffset;
 
   @override
   void initState() {
@@ -38,15 +40,18 @@ class _MyTimelineState extends State<MyTimeline> {
     currentYear = widget.startYear;
     currentYear > 0 ? textYear = "${currentYear.abs().toString()} CE" : textYear = "${currentYear.abs().toString()} BCE";
     scrollController.addListener(_onSlide); //Subscribes the scrollController to the _onSlide method
-    widget.isVertical ?
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]) :
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    scrollControllerVertical.addListener(_onSlide);
+    widget.isVertical
+        ? SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+        : SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    dateOffset = 5;
     super.initState();
   }
 
   void _onSlide() {
     //set a new State in the timeline when the user slides the timeline
     setState(_textCurrentYear);
+    setState(_dateOffset);
   }
 
   void _textCurrentYear() {
@@ -55,24 +60,28 @@ class _MyTimelineState extends State<MyTimeline> {
     currentYear > 0 ? textYear = "${currentYear.abs().toString()} CE" : textYear = "${currentYear.abs().toString()} BCE";
   }
 
+  void _dateOffset() {
+    dateOffset = dateOffset = scrollControllerVertical.offset + 5;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
       return Stack(
         children: [
           SingleChildScrollView(
-            scrollDirection: widget.isVertical ? Axis.vertical : Axis.horizontal,
+              scrollDirection: widget.isVertical ? Axis.vertical : Axis.horizontal,
               physics: BouncingScrollPhysics(),
               controller: scrollController,
-              child: (Column(
-                children: [
-                  Stack(
+              child: (SingleChildScrollView(
+                scrollDirection: widget.isVertical ? Axis.horizontal : Axis.vertical,
+                controller: scrollControllerVertical,
+                child: Container(
+                  width: calculateWidth(constraints),
+                  height: calculateHeight(constraints),
+                  color: Colors.black,
+                  child: Stack(
                     children: [
-                      Container(
-                        height: widget.isVertical ? (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxHeight : constraints.maxHeight,
-                        width: widget.isVertical ? constraints.maxWidth : (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxWidth,
-                        color: Colors.black,
-                      ),
                       for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) createContainer(i, constraints),
                       for (var tour in widget.tours)
                         TimelineItem(
@@ -94,7 +103,7 @@ class _MyTimelineState extends State<MyTimeline> {
                             TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
                     ],
                   ),
-                ],
+                ),
               ))),
           Container(
             margin: widget.isVertical ? EdgeInsets.only(top: constraints.maxHeight / 2) : EdgeInsets.only(left: constraints.maxWidth / 2),
@@ -112,6 +121,7 @@ class _MyTimelineState extends State<MyTimeline> {
             child: TimelineMap(
               constraints: constraints,
               scrollController: scrollController,
+              scrollControllerVertical: scrollControllerVertical,
               totalYears: widget.endYear - widget.startYear,
               tours: widget.tours,
               numberColumns: widget.numberColumns,
@@ -127,12 +137,16 @@ class _MyTimelineState extends State<MyTimeline> {
   //Used to set the years in the timeline
   Widget createContainer(int i, BoxConstraints constraints) {
     return Positioned(
-        top: widget.isVertical ? i + constraints.maxHeight / 2 : 5,
-        left: widget.isVertical ? 5 : i + constraints.maxWidth / 2,
+        top: widget.isVertical ? i + constraints.maxHeight / 2 : dateOffset,
+        left: widget.isVertical ? dateOffset : i + constraints.maxWidth / 2,
         width: constraints.maxWidth / (widget.numberColumns),
         child: Container(
           alignment: Alignment.centerLeft,
-          child: Text((i + widget.startYear).toString(), style: const TextStyle(color: Colors.white), textAlign: TextAlign.center,),
+          child: Text(
+            (i + widget.startYear).toString(),
+            style: const TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
         ));
   }
 
@@ -146,6 +160,22 @@ class _MyTimelineState extends State<MyTimeline> {
       dashColor: Colors.grey.withOpacity(0.8),
     );
   }
+
+  double calculateWidth(BoxConstraints constraints) {
+    if (widget.numberColumns > 5) {
+      return widget.isVertical
+          ? (constraints.maxWidth / 5) * (widget.numberColumns - 1)
+          : (widget.endYear - widget.startYear.toDouble() + constraints.maxWidth);
+    }
+    return widget.isVertical ? constraints.maxWidth : constraints.maxHeight;
+  }
+
+  double calculateHeight(BoxConstraints constraints) {
+    return widget.isVertical
+        ? (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxHeight
+        : (constraints.maxHeight / 5) * (widget.numberColumns - 1) + 50;
+  }
+
   void dispose() {
     scrollController.dispose();
 
@@ -158,5 +188,4 @@ class _MyTimelineState extends State<MyTimeline> {
 
     super.dispose();
   }
-
 }

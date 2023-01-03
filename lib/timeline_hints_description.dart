@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'data/tour_hint.dart';
 
 class TimelineHintDescription extends StatefulWidget {

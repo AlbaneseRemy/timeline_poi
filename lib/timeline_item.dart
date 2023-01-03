@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_poi/timeline_info.dart';
 import 'Navigation.dart';
@@ -30,14 +28,12 @@ class TimelineItem extends StatelessWidget {
     return Positioned(
       top: isVertical ? (tour.startYear - startYear).toDouble() + constraints.maxHeight / 2 : leftPosition(),
       left: isVertical ? leftPosition() : (tour.startYear - startYear).toDouble() + constraints.maxWidth / 2,
-      width: isVertical ? constraints.maxWidth / (numberColumns + 1) : (tour.endYear - tour.startYear).toDouble(),
-      height: isVertical
-          ? (tour.endYear - tour.startYear).toDouble()
-          : constraints.maxHeight / (numberColumns + 1) - (constraints.maxHeight / 10) / (numberColumns),
+      width: calculateWidth(),
+      height: calculateHeight(),
       child: GestureDetector(
         onTap: () => Navigation.goTo(context, TimelineInfo(tour: tour)),
         child: Padding(
-          padding: isVertical ? const EdgeInsets.symmetric(horizontal: 15.0) : const EdgeInsets.symmetric(vertical: 15.0),
+          padding: isVertical ? EdgeInsets.symmetric(horizontal: numberColumns == 2 ? 30 : 20.0) : EdgeInsets.symmetric(vertical: 8.0),
           child: Container(
             child: tour.imageUri == null
                 ? Align(
@@ -80,10 +76,38 @@ class TimelineItem extends StatelessWidget {
 
   //Determines on which column the item should be placed
   double leftPosition() {
+    if (numberColumns > 5) {
+      return isVertical? constraints.maxWidth / 6 * (tour.columnId + 1) - 30 : (constraints.maxHeight / 6 * (tour.columnId + 1) - 30);
+
+      /*(constraints.maxHeight) / (6) * (tour.columnId) +
+          ((constraints.maxHeight / (numberColumns + 1)) / (numberColumns + 1)) +
+          60 / numberColumns;*/
+    }
+
+    double dateWidth = 40;
+    double itemWidth = (constraints.maxWidth - dateWidth) / (numberColumns + 1);
+
     return isVertical
-        ? (tour.columnId + 1) * constraints.maxWidth / (numberColumns)
+        ? (dateWidth + ((constraints.maxWidth-dateWidth)/(numberColumns+1) - itemWidth/2)) * (tour.columnId+1)
         : (constraints.maxHeight) / (numberColumns + 1) * (tour.columnId) +
             ((constraints.maxHeight / (numberColumns + 1)) / (numberColumns + 1)) +
-            30 / numberColumns;
+            60 / numberColumns;
+  }
+
+  double calculateWidth() {
+    if(numberColumns > 5){
+      return isVertical ? (constraints.maxWidth / 5) : (tour.endYear - tour.startYear).toDouble();
+    }
+    return isVertical ? (constraints.maxWidth - 40) / (numberColumns + 1) : (tour.endYear - tour.startYear).toDouble();
+  }
+
+  double calculateHeight() {
+    if(numberColumns > 5){
+      return isVertical ? (tour.endYear - tour.startYear).toDouble() : ((constraints.maxHeight -40)/ 6);
+    }
+
+    return isVertical
+        ? (tour.endYear - tour.startYear).toDouble()
+        : constraints.maxHeight / (numberColumns + 1) - (constraints.maxHeight / 10) / (numberColumns);
   }
 }
