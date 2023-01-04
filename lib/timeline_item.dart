@@ -78,10 +78,6 @@ class TimelineItem extends StatelessWidget {
   double leftPosition() {
     if (numberColumns > 5) {
       return isVertical? constraints.maxWidth / 6 * (tour.columnId + 1) - 30 : (constraints.maxHeight / 6 * (tour.columnId + 1) - 40);
-
-      /*(constraints.maxHeight) / (6) * (tour.columnId) +
-          ((constraints.maxHeight / (numberColumns + 1)) / (numberColumns + 1)) +
-          60 / numberColumns;*/
     }
 
     double dateWidth = 40;

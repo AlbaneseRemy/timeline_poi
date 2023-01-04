@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:timeline_poi/timeline_hints.dart';
 import 'package:timeline_poi/timeline_hints_description.dart';
@@ -34,6 +35,7 @@ class _MyTimelineState extends State<MyTimeline> {
   late int currentYear;
   late String textYear;
   late double dateOffset;
+  late AnimationController _animationController;
 
   @override
   void initState() {
@@ -70,42 +72,63 @@ class _MyTimelineState extends State<MyTimeline> {
     return Scaffold(body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
       return Stack(
         children: [
-          SingleChildScrollView(
-              scrollDirection: widget.isVertical ? Axis.vertical : Axis.horizontal,
-              physics: BouncingScrollPhysics(),
-              controller: scrollController,
-              child: (SingleChildScrollView(
-                scrollDirection: widget.isVertical ? Axis.horizontal : Axis.vertical,
-                controller: scrollControllerVertical,
-                child: Container(
-                  width: calculateWidth(constraints),
-                  height: calculateHeight(constraints),
-                  color: Colors.black,
-                  child: Stack(
-                    children: [
-                      for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) createContainer(i, constraints),
-                      for (var tour in widget.tours)
-                        TimelineItem(
-                          tour: tour,
-                          tours: widget.tours,
-                          constraints: constraints,
-                          numberColumns: widget.numberColumns,
-                          startYear: widget.startYear,
-                          endYear: widget.endYear,
-                          isVertical: widget.isVertical,
-                        ),
-                      for (var tour in widget.tours)
-                        if (tour.hints != null)
-                          for (var hint in tour.hints!)
-                            TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
-                      for (var tour in widget.tours)
-                        if (tour.hints != null)
-                          for (var hint in tour.hints!)
-                            TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
-                    ],
+          GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                scrollController.position.moveTo(widget.isVertical ? scrollController.position.pixels - details.delta.dy : scrollController.position.pixels - details.delta.dx);
+                scrollControllerVertical.position.moveTo(widget.isVertical ? scrollControllerVertical.position.pixels - details.delta.dx : scrollController.position.pixels - details.delta.dy);
+              });
+            },
+            onPanEnd: (details) {
+              scrollController.position.animateTo(
+                scrollController.offset - details.velocity.pixelsPerSecond.dy/5,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOutCubic,
+              );
+              scrollControllerVertical.position.animateTo(
+                scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx/5,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOutCubic,
+              );
+            },
+            child: SingleChildScrollView(
+                scrollDirection: widget.isVertical ? Axis.vertical : Axis.horizontal,
+                physics: kIsWeb ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                controller: scrollController,
+                child: (SingleChildScrollView(
+                  physics: kIsWeb ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                  scrollDirection: widget.isVertical ? Axis.horizontal : Axis.vertical,
+                  controller: scrollControllerVertical,
+                  child: Container(
+                    width: calculateWidth(constraints),
+                    height: calculateHeight(constraints),
+                    color: Colors.black,
+                    child: Stack(
+                      children: [
+                        for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) createContainer(i, constraints),
+                        for (var tour in widget.tours)
+                          TimelineItem(
+                            tour: tour,
+                            tours: widget.tours,
+                            constraints: constraints,
+                            numberColumns: widget.numberColumns,
+                            startYear: widget.startYear,
+                            endYear: widget.endYear,
+                            isVertical: widget.isVertical,
+                          ),
+                        for (var tour in widget.tours)
+                          if (tour.hints != null)
+                            for (var hint in tour.hints!)
+                              TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                        for (var tour in widget.tours)
+                          if (tour.hints != null)
+                            for (var hint in tour.hints!)
+                              TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                      ],
+                    ),
                   ),
-                ),
-              ))),
+                ))),
+          ),
           Container(
             margin: widget.isVertical ? EdgeInsets.only(top: constraints.maxHeight / 2) : EdgeInsets.only(left: constraints.maxWidth / 2),
             child: transparentDottedLine(),

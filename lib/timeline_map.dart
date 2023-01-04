@@ -77,7 +77,7 @@ class _TimelineMapState extends State<TimelineMap> {
           child: Container(
             //TODO: Make it so the box is the representation of what's displayed on the screen
             width: boxWidth(),
-            height: widget.isVertical ? height20 : height10,
+            height: boxHeight(), //.isVertical ? height20 : height10,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
             ),
@@ -148,4 +148,15 @@ class _TimelineMapState extends State<TimelineMap> {
         ? widget.constraints.maxHeight * widget.constraints.maxWidth / widget.totalYears
         : (widget.constraints.maxWidth) * (widget.constraints.maxWidth / widget.totalYears);
   }
+
+  double boxHeight(){
+    return widget.isVertical
+        ? widget.numberColumns > 5
+        ? (height10 / 5) * (widget.numberColumns-10)
+        : height10
+        : widget.numberColumns > 5
+        ? height5 / 5 * widget.numberColumns
+        : height5;
+  }
+
 }
