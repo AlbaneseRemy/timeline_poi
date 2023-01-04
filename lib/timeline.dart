@@ -36,6 +36,7 @@ class _MyTimelineState extends State<MyTimeline> {
   late String textYear;
   late double dateOffset;
   late AnimationController _animationController;
+  Color baseColor = Colors.black;
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _MyTimelineState extends State<MyTimeline> {
   }
 
   void _dateOffset() {
-    dateOffset = dateOffset = scrollControllerVertical.offset;
+    dateOffset = scrollControllerVertical.offset;
   }
 
   @override
@@ -76,33 +77,33 @@ class _MyTimelineState extends State<MyTimeline> {
             onPanUpdate: (details) {
               setState(() {
                 scrollController.position.moveTo(widget.isVertical ? scrollController.position.pixels - details.delta.dy : scrollController.position.pixels - details.delta.dx);
-                scrollControllerVertical.position.moveTo(widget.isVertical ? scrollControllerVertical.position.pixels - details.delta.dx : scrollController.position.pixels - details.delta.dy);
+                scrollControllerVertical.position.moveTo(widget.isVertical ? scrollControllerVertical.position.pixels - details.delta.dx : scrollControllerVertical.position.pixels - details.delta.dy);
               });
             },
             onPanEnd: (details) {
               scrollController.position.animateTo(
-                scrollController.offset - details.velocity.pixelsPerSecond.dy/5,
+                widget.isVertical ? scrollController.offset - details.velocity.pixelsPerSecond.dy/5 : scrollController.offset - details.velocity.pixelsPerSecond.dx/5,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOutCubic,
               );
               scrollControllerVertical.position.animateTo(
-                scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx/5,
+                widget.isVertical ? scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx/5 : scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dy/5,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOutCubic,
               );
             },
             child: SingleChildScrollView(
                 scrollDirection: widget.isVertical ? Axis.vertical : Axis.horizontal,
-                physics: kIsWeb ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                physics: kIsWeb ? const ClampingScrollPhysics() : const NeverScrollableScrollPhysics(),
                 controller: scrollController,
                 child: (SingleChildScrollView(
-                  physics: kIsWeb ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                  physics: kIsWeb ? const ClampingScrollPhysics() : const NeverScrollableScrollPhysics(),
                   scrollDirection: widget.isVertical ? Axis.horizontal : Axis.vertical,
                   controller: scrollControllerVertical,
                   child: Container(
                     width: calculateWidth(constraints),
                     height: calculateHeight(constraints),
-                    color: Colors.black,
+                    color: baseColor,
                     child: Stack(
                       children: [
                         for (var tour in widget.tours)
@@ -164,12 +165,11 @@ class _MyTimelineState extends State<MyTimeline> {
     return Positioned(
         top: widget.isVertical ? i + constraints.maxHeight / 2 : dateOffset,
         left: widget.isVertical ? dateOffset : i + constraints.maxWidth / 2,
-        width: constraints.maxWidth / (widget.numberColumns),
-        height: 100,
+        width: widget.isVertical ? constraints.maxWidth / (widget.numberColumns) : 100,
+        height: widget.isVertical ? 100 : 30,
         child: Container(
-          alignment: Alignment.centerLeft,
-          color: Colors.black,
-          padding: EdgeInsets.only(left: 10),
+          alignment: Alignment.topLeft,
+          color: baseColor,
           child: Text(
             (i + widget.startYear).toString(),
             style: const TextStyle(color: Colors.white),

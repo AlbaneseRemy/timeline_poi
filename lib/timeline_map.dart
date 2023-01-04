@@ -124,7 +124,7 @@ class _TimelineMapState extends State<TimelineMap> {
   }
 
   double topPosition() {
-    return widget.isVertical ? widget.scrollControllerVertical.offset / ((widget.totalYears / widget.constraints.maxWidth)) : widget.scrollControllerVertical.offset / ((widget.totalYears / widget.constraints.maxHeight)) ;
+    return widget.isVertical ? widget.scrollControllerVertical.offset / ((widget.totalYears / widget.constraints.maxWidth)) : (widget.scrollControllerVertical.offset / ((widget.totalYears / widget.constraints.maxHeight)))/2 ;
   }
 
   //Defines how long the tour's line is in the map
@@ -150,12 +150,13 @@ class _TimelineMapState extends State<TimelineMap> {
   }
 
   double boxHeight(){
+    double heightRatio = (widget.constraints.maxWidth-40)  ;
     return widget.isVertical
         ? widget.numberColumns > 5
-        ? (height10 / 5) * (widget.numberColumns-10)
+        ? height10 * widget.numberColumns / 5
         : height10
         : widget.numberColumns > 5
-        ? height5 / 5 * widget.numberColumns
+        ? height5 * widget.numberColumns / 5
         : height5;
   }
 

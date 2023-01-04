@@ -10,6 +10,7 @@ class Tour {
   final int startYear;
   final int endYear;
   final Color color;
+  final Color textColor;
   int columnId;
   final List<TourHint>? hints;
 
@@ -22,6 +23,7 @@ class Tour {
     this.description,
     this.imageUri,
     this.color = Colors.blue,
+    this.textColor = Colors.black,
     this.columnId = 0,
     this.hints,
   });

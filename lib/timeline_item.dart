@@ -39,8 +39,9 @@ class TimelineItem extends StatelessWidget {
                 ? Align(
                     child: Text(
                       tour.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
+                        color: tour.textColor
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -92,7 +93,7 @@ class TimelineItem extends StatelessWidget {
 
   double calculateWidth() {
     if(numberColumns > 5){
-      return isVertical ? (constraints.maxWidth / 5) : (tour.endYear - tour.startYear).toDouble();
+      return isVertical ? ((constraints.maxWidth-40) / 5) : (tour.endYear - tour.startYear).toDouble();
     }
     return isVertical ? (constraints.maxWidth - 40) / (numberColumns + 1) : (tour.endYear - tour.startYear).toDouble();
   }
