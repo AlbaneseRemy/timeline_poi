@@ -47,7 +47,7 @@ class _MyTimelineState extends State<MyTimeline> {
     widget.isVertical
         ? SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
         : SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-    dateOffset = 5;
+    dateOffset = 0;
     super.initState();
   }
 
@@ -64,7 +64,7 @@ class _MyTimelineState extends State<MyTimeline> {
   }
 
   void _dateOffset() {
-    dateOffset = dateOffset = scrollControllerVertical.offset + 5;
+    dateOffset = dateOffset = scrollControllerVertical.offset;
   }
 
   @override
@@ -105,7 +105,6 @@ class _MyTimelineState extends State<MyTimeline> {
                     color: Colors.black,
                     child: Stack(
                       children: [
-                        for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) createContainer(i, constraints),
                         for (var tour in widget.tours)
                           TimelineItem(
                             tour: tour,
@@ -124,6 +123,7 @@ class _MyTimelineState extends State<MyTimeline> {
                           if (tour.hints != null)
                             for (var hint in tour.hints!)
                               TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                        for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) dateList(i, constraints),
                       ],
                     ),
                   ),
@@ -160,13 +160,16 @@ class _MyTimelineState extends State<MyTimeline> {
   }
 
   //Used to set the years in the timeline
-  Widget createContainer(int i, BoxConstraints constraints) {
+  Widget dateList(int i, BoxConstraints constraints) {
     return Positioned(
         top: widget.isVertical ? i + constraints.maxHeight / 2 : dateOffset,
         left: widget.isVertical ? dateOffset : i + constraints.maxWidth / 2,
         width: constraints.maxWidth / (widget.numberColumns),
+        height: 100,
         child: Container(
           alignment: Alignment.centerLeft,
+          color: Colors.black,
+          padding: EdgeInsets.only(left: 10),
           child: Text(
             (i + widget.startYear).toString(),
             style: const TextStyle(color: Colors.white),
