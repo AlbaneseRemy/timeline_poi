@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:timeline_poi/timeline_hints.dart';
 import 'package:timeline_poi/timeline_hints_description.dart';
@@ -71,24 +70,33 @@ class _MyTimelineState extends State<MyTimeline> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      double width = calculateWidth(constraints);
+      double height = calculateHeight(constraints);
       return Stack(
         children: [
           GestureDetector(
             onPanUpdate: (details) {
               setState(() {
-                scrollController.position.moveTo(widget.isVertical ? scrollController.position.pixels - details.delta.dy : scrollController.position.pixels - details.delta.dx);
-                scrollControllerVertical.position.moveTo(widget.isVertical ? scrollControllerVertical.position.pixels - details.delta.dx : scrollControllerVertical.position.pixels - details.delta.dy);
+                scrollController.position
+                    .moveTo(widget.isVertical ? scrollController.position.pixels - details.delta.dy : scrollController.position.pixels - details.delta.dx);
+                scrollControllerVertical.position.moveTo(widget.isVertical
+                    ? scrollControllerVertical.position.pixels - details.delta.dx
+                    : scrollControllerVertical.position.pixels - details.delta.dy);
               });
             },
             onPanEnd: (details) {
               scrollController.position.animateTo(
-                widget.isVertical ? scrollController.offset - details.velocity.pixelsPerSecond.dy/5 : scrollController.offset - details.velocity.pixelsPerSecond.dx/5,
-                duration: const Duration(milliseconds: 500),
+                widget.isVertical
+                    ? scrollController.offset - details.velocity.pixelsPerSecond.dy/5
+                    : scrollController.offset - details.velocity.pixelsPerSecond.dx/5,
+                duration: const Duration(milliseconds: 1000),
                 curve: Curves.easeOutCubic,
               );
               scrollControllerVertical.position.animateTo(
-                widget.isVertical ? scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx/5 : scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dy/5,
-                duration: const Duration(milliseconds: 500),
+                widget.isVertical
+                    ? scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx/5
+                    : scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dy/5 ,
+                duration: const Duration(milliseconds: 1000),
                 curve: Curves.easeOutCubic,
               );
             },
@@ -139,7 +147,7 @@ class _MyTimelineState extends State<MyTimeline> {
               textYear,
               style: TextStyle(color: Colors.white),
             ),
-            top: widget.isVertical ? constraints.maxHeight / 2 - 40 : constraints.maxHeight  * 0.8 - 40,
+            top: widget.isVertical ? constraints.maxHeight / 2 - 40 : constraints.maxHeight * 0.8 - 40,
             left: widget.isVertical ? constraints.maxWidth * 0.8 : constraints.maxWidth / 2 - 40,
           ),
           Positioned(
@@ -152,6 +160,8 @@ class _MyTimelineState extends State<MyTimeline> {
               numberColumns: widget.numberColumns,
               startYear: widget.startYear,
               isVertical: widget.isVertical,
+              totalHeight: height,
+              totalWidth: width,
             ),
             bottom: 0,
           )
@@ -165,7 +175,7 @@ class _MyTimelineState extends State<MyTimeline> {
     return Positioned(
         top: widget.isVertical ? i + constraints.maxHeight / 2 : dateOffset,
         left: widget.isVertical ? dateOffset : i + constraints.maxWidth / 2,
-        width: widget.isVertical ? constraints.maxWidth / (widget.numberColumns) : 100,
+        width: widget.isVertical ? 50 : 100,
         height: widget.isVertical ? 100 : 30,
         child: Container(
           alignment: Alignment.topLeft,
@@ -191,17 +201,18 @@ class _MyTimelineState extends State<MyTimeline> {
 
   double calculateWidth(BoxConstraints constraints) {
     if (widget.numberColumns > 5) {
-      return widget.isVertical
-          ? (constraints.maxWidth / 5) * (widget.numberColumns - 1)
-          : (widget.endYear - widget.startYear.toDouble() + constraints.maxWidth);
+      return widget.isVertical ? (constraints.maxWidth / 5) * (widget.numberColumns) + 40 : (widget.endYear - widget.startYear + constraints.maxWidth);
     }
-    return widget.isVertical ? constraints.maxWidth : constraints.maxHeight;
+    return widget.isVertical ? constraints.maxWidth : (widget.endYear - widget.startYear + constraints.maxWidth);
   }
 
   double calculateHeight(BoxConstraints constraints) {
+    if (widget.numberColumns <= 5) {
+      return (widget.isVertical ? widget.endYear - widget.startYear + constraints.maxHeight : constraints.maxHeight);
+    }
     return widget.isVertical
-        ? (widget.startYear.abs() + widget.endYear.abs()).toDouble() + constraints.maxHeight
-        : kIsWeb ? (constraints.maxHeight / 5) * (widget.numberColumns - 1) + 150 : (constraints.maxHeight / 5) * (widget.numberColumns - 1) + 50;
+        ? (widget.endYear - widget.startYear + constraints.maxHeight)
+        : (constraints.maxHeight / 5) * (widget.numberColumns) + constraints.maxHeight / 5 + 40;
   }
 
   void dispose() {

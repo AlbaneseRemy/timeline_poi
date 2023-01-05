@@ -26,14 +26,14 @@ class TimelineItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: isVertical ? (tour.startYear - startYear).toDouble() + constraints.maxHeight / 2 : leftPosition(),
-      left: isVertical ? leftPosition() : (tour.startYear - startYear).toDouble() + constraints.maxWidth / 2,
+      top: isVertical ? (tour.startYear - startYear).toDouble() + constraints.maxHeight / 2 : itemPosition(),
+      left: isVertical ? itemPosition() : (tour.startYear - startYear).toDouble() + constraints.maxWidth / 2,
       width: calculateWidth(),
       height: calculateHeight(),
       child: GestureDetector(
         onTap: () => Navigation.goTo(context, TimelineInfo(tour: tour)),
         child: Padding(
-          padding: isVertical ? EdgeInsets.symmetric(horizontal: numberColumns == 2 ? 30 : 20.0) : EdgeInsets.symmetric(vertical: 8.0),
+          padding: isVertical ? EdgeInsets.symmetric(horizontal: numberColumns == 2 ? 30 : 20.0) : EdgeInsets.symmetric(vertical: 16.0),
           child: Container(
             child: tour.imageUri == null
                 ? Align(
@@ -76,9 +76,9 @@ class TimelineItem extends StatelessWidget {
   }
 
   //Determines on which column the item should be placed
-  double leftPosition() {
+  double itemPosition() {
     if (numberColumns > 5) {
-      return isVertical? constraints.maxWidth / 6 * (tour.columnId + 1) - 30 : (constraints.maxHeight / 6 * (tour.columnId + 1) - 40);
+      return isVertical? constraints.maxWidth / 5 * (tour.columnId) + 40 : (constraints.maxHeight / 5 * (tour.columnId) + 40);
     }
 
     double dateWidth = 40;
@@ -95,7 +95,7 @@ class TimelineItem extends StatelessWidget {
     if(numberColumns > 5){
       return isVertical ? ((constraints.maxWidth-40) / 5) : (tour.endYear - tour.startYear).toDouble();
     }
-    return isVertical ? (constraints.maxWidth - 40) / (numberColumns + 1) : (tour.endYear - tour.startYear).toDouble();
+    return isVertical ? (constraints.maxWidth - 40) / (numberColumns) : (tour.endYear - tour.startYear).toDouble();
   }
 
   double calculateHeight() {
