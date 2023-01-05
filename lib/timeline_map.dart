@@ -158,6 +158,6 @@ class _TimelineMapState extends State<TimelineMap> {
               (widget.totalWidth - widget.constraints.maxWidth / 10)
           : (widget.constraints.maxHeight / 5) * (widget.constraints.maxHeight - widget.constraints.maxHeight / 5) / widget.totalHeight;
     }
-    return widget.isVertical ? widget.constraints.maxHeight / 10 : (widget.constraints.maxWidth / 5);
+    return widget.isVertical ? widget.constraints.maxHeight / 10 : widget.constraints.maxHeight / 5;
   }
 }

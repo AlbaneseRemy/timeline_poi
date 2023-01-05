@@ -67,20 +67,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
       Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
       Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
-      //Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
+      Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
       Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
       Tour(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
       Tour(title: "Tour numéro 7", id: "7", startYear: 540, endYear: 700, color: Colors.brown),
       Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
       Tour(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
-      Tour(title: "Tour numéro 10", id: "10", startYear: 600, endYear: 800, color: Colors.yellow),
+      /*Tour(title: "Tour numéro 10", id: "10", startYear: 600, endYear: 800, color: Colors.yellow),
       Tour(title: "Tour numéro 11", id: "11", startYear: 600, endYear: 800, color: Colors.yellow),
       Tour(title: "Tour numéro 12", id: "12", startYear: 600, endYear: 800, color: Colors.yellow),
       Tour(title: "Tour numéro 13", id: "13", startYear: 600, endYear: 800, color: Colors.yellow),
       Tour(title: "Tour numéro 14", id: "14", startYear: 600, endYear: 800, color: Colors.yellow),
       Tour(title: "Tour numéro 15", id: "15", startYear: 600, endYear: 800, color: Colors.yellow),
       Tour(title: "Tour numéro 16", id: "16", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 17", id: "17", startYear: 600, endYear: 800, color: Colors.yellow),
+      Tour(title: "Tour numéro 17", id: "17", startYear: 600, endYear: 800, color: Colors.yellow),*/
 
     ];
 

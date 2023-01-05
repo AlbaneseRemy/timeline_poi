@@ -76,19 +76,17 @@ class TimelineItem extends StatelessWidget {
   }
 
   //Determines on which column the item should be placed
+  //40 is the size of the date container
   double itemPosition() {
     if (numberColumns > 5) {
       return isVertical? constraints.maxWidth / 5 * (tour.columnId) + 40 : (constraints.maxHeight / 5 * (tour.columnId) + 40);
     }
 
-    double dateWidth = 40;
-    double itemWidth = (constraints.maxWidth - dateWidth) / (numberColumns + 1);
+    double itemWidth = (constraints.maxWidth - 40) / (numberColumns);
 
     return isVertical
-        ? (dateWidth + ((constraints.maxWidth-dateWidth)/(numberColumns+1) - itemWidth/2)) * (tour.columnId+1)
-        : (constraints.maxHeight) / (numberColumns + 1) * (tour.columnId) +
-            ((constraints.maxHeight / (numberColumns + 1)) / (numberColumns + 1)) +
-            60 / numberColumns;
+        ? (40 + ((constraints.maxWidth-40)/(numberColumns) - itemWidth/2)) * (tour.columnId) + 40
+        : ((constraints.maxHeight - constraints.maxHeight/5 - 40) / numberColumns) * tour.columnId + 40;
   }
 
   double calculateWidth() {
@@ -100,7 +98,7 @@ class TimelineItem extends StatelessWidget {
 
   double calculateHeight() {
     if(numberColumns > 5){
-      return isVertical ? (tour.endYear - tour.startYear).toDouble() : ((constraints.maxHeight -40)/ 6);
+      return isVertical ? (tour.endYear - tour.startYear).toDouble() : ((constraints.maxHeight -40)/ 5);
     }
 
     return isVertical
