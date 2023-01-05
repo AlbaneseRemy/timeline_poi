@@ -10,6 +10,8 @@ class TimelineMap extends StatefulWidget {
   final int startYear;
   final List<Tour>? tours;
   final bool isVertical;
+  final double totalHeight;
+  final double totalWidth;
 
   const TimelineMap(
       {Key? key,
@@ -20,7 +22,9 @@ class TimelineMap extends StatefulWidget {
       required this.numberColumns,
       required this.startYear,
       required this.scrollControllerVertical,
-      required this.isVertical})
+      required this.isVertical,
+      required this.totalHeight,
+      required this.totalWidth})
       : super(key: key);
 
   @override
@@ -28,21 +32,6 @@ class TimelineMap extends StatefulWidget {
 }
 
 class _TimelineMapState extends State<TimelineMap> {
-  late double width10;
-  late double width5;
-  late double height20;
-  late double height10;
-  late double height5;
-
-  initState() {
-    super.initState();
-    width10 = widget.constraints.maxWidth / 10;
-    width5 = widget.constraints.maxWidth / 5;
-    height20 = widget.constraints.maxHeight / 20;
-    height10 = widget.constraints.maxHeight / 10;
-    height5 = widget.constraints.maxHeight / 5;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -53,7 +42,7 @@ class _TimelineMapState extends State<TimelineMap> {
         feedback: Container(),
         child: Container(
           width: widget.constraints.maxWidth,
-          height: widget.isVertical ? height10 : height5,
+          height: widget.isVertical ? widget.constraints.maxHeight / 10 : widget.constraints.maxHeight / 5,
           decoration: BoxDecoration(
             color: Colors.black,
             boxShadow: [
@@ -67,25 +56,6 @@ class _TimelineMapState extends State<TimelineMap> {
           ),
         ),
       ),
-      Positioned(
-        child: Draggable(
-          onDragUpdate: (details) {
-            updatePosition(details);
-          },
-          axis: Axis.horizontal,
-          feedback: Container(),
-          child: Container(
-            //TODO: Make it so the box is the representation of what's displayed on the screen
-            width: boxWidth(),
-            height: boxHeight(), //.isVertical ? height20 : height10,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-            ),
-          ),
-        ),
-        left: leftPosition(),
-        top: topPosition(),
-      ),
       if (widget.tours != null)
         for (var tour in widget.tours!)
           Positioned(
@@ -98,7 +68,9 @@ class _TimelineMapState extends State<TimelineMap> {
               feedback: Container(),
               child: Container(
                 width: getLength(tour),
-                height: widget.constraints.maxHeight / 150,
+                height: widget.isVertical
+                    ? ((widget.constraints.maxHeight / 10) / widget.numberColumns) * 0.8
+                    : ((widget.constraints.maxHeight / 5) / widget.numberColumns) * 0.8,
                 decoration: BoxDecoration(
                   color: tour.color.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(10),
@@ -106,6 +78,25 @@ class _TimelineMapState extends State<TimelineMap> {
               ),
             ),
           ),
+      Positioned(
+        child: Draggable(
+          onDragUpdate: (details) {
+            updatePosition(details);
+          },
+          axis: Axis.horizontal,
+          feedback: Container(),
+          child: Container(
+            //TODO: Make it so the box is the representation of what's displayed on the screen
+            width: boxWidth(),
+            height: boxHeight(), //.isVertical ? height20 : height10,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white.withOpacity(0.75), width: 2),
+            ),
+          ),
+        ),
+        left: leftPosition(),
+        top: mapTopPosition(),
+      ),
     ]);
   }
 
@@ -113,9 +104,12 @@ class _TimelineMapState extends State<TimelineMap> {
   void updatePosition(DragUpdateDetails details) {
     widget.scrollController.position.moveTo(widget.scrollController.offset + details.delta.dx * widget.totalYears / widget.constraints.maxWidth);
     //Only move the vertical scroll if the user is dragging the map and not above it
-    if (details.globalPosition.dy >= widget.constraints.maxHeight - height5)
-      widget.scrollControllerVertical.position
-          .moveTo(widget.scrollControllerVertical.offset + details.delta.dy * widget.totalYears / widget.constraints.maxWidth);
+    if (details.globalPosition.dy >= widget.constraints.maxHeight - widget.constraints.maxHeight / 5)
+      widget.isVertical
+          ? widget.scrollControllerVertical.position
+              .moveTo(widget.scrollControllerVertical.offset + (details.delta.dy / (widget.constraints.maxHeight / 10)) * widget.totalWidth)
+          : widget.scrollControllerVertical.position
+              .moveTo(widget.scrollControllerVertical.offset + (details.delta.dy / (widget.constraints.maxHeight / 5)) * widget.totalWidth);
   }
 
   //Sets the left position of the white frame that follows the user's finger
@@ -123,8 +117,12 @@ class _TimelineMapState extends State<TimelineMap> {
     return (widget.scrollController.offset / (widget.totalYears / widget.constraints.maxWidth)) - boxWidth() / 2;
   }
 
-  double topPosition() {
-    return widget.isVertical ? widget.scrollControllerVertical.offset / ((widget.totalYears / widget.constraints.maxWidth)) : (widget.scrollControllerVertical.offset / ((widget.totalYears / widget.constraints.maxHeight)))/2 ;
+  double mapTopPosition() {
+    if (widget.numberColumns <= 5) return 0;
+
+    return widget.isVertical
+        ? widget.scrollControllerVertical.offset / widget.totalWidth * (widget.constraints.maxHeight / 10)
+        : widget.scrollControllerVertical.offset / (widget.totalHeight-widget.constraints.maxHeight/5 - 50) * (widget.constraints.maxHeight / 5);
   }
 
   //Defines how long the tour's line is in the map
@@ -140,24 +138,26 @@ class _TimelineMapState extends State<TimelineMap> {
 
   double getItemTopPosition(Tour tour) {
     //Sets the position of the tour's line in the map. It should always be an equal distance between lines
-    return widget.isVertical ? height10 / (widget.numberColumns + 1) * (tour.columnId + 1) : height5 / (widget.numberColumns + 1) * (tour.columnId + 1);
+    return widget.isVertical
+        ? widget.constraints.maxHeight / 10 / (widget.numberColumns) * (tour.columnId)
+        : widget.constraints.maxHeight / 5 / (widget.numberColumns) * (tour.columnId);
   }
 
   double boxWidth() {
     return widget.isVertical
         ? widget.constraints.maxHeight * widget.constraints.maxWidth / widget.totalYears
-        : (widget.constraints.maxWidth) * (widget.constraints.maxWidth / widget.totalYears);
+        : widget.constraints.maxWidth * widget.constraints.maxWidth / widget.totalYears;
   }
 
-  double boxHeight(){
-    double heightRatio = (widget.constraints.maxWidth-40)  ;
-    return widget.isVertical
-        ? widget.numberColumns > 5
-        ? height10 * widget.numberColumns / 5
-        : height10
-        : widget.numberColumns > 5
-        ? height5 * widget.numberColumns / 5
-        : height5;
+  double boxHeight() {
+    if (widget.numberColumns > 5) {
+      return widget.isVertical
+          ? widget.constraints.maxHeight /
+              10 *
+              (widget.constraints.maxWidth - widget.constraints.maxWidth / 10 + 30) /
+              (widget.totalWidth - widget.constraints.maxWidth / 10)
+          : (widget.constraints.maxHeight / 5) * (widget.constraints.maxHeight - widget.constraints.maxHeight / 5) / widget.totalHeight;
+    }
+    return widget.isVertical ? widget.constraints.maxHeight / 10 : (widget.constraints.maxWidth / 5);
   }
-
 }
