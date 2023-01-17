@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'data/tour.dart';
+import 'data/timeline_entry.dart';
 
 class TimelineInfo extends StatefulWidget {
 
-  final Tour tour;
+  final TimelineEntry tour;
 
   const TimelineInfo({Key? key, required this.tour}) : super(key: key);
 

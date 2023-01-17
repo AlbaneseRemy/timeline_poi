@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:timeline_poi/timeline_info.dart';
-import 'Navigation.dart';
-import 'data/tour.dart';
+import 'data/timeline_entry.dart';
 
 class TimelineItem extends StatelessWidget {
-  final Tour tour;
-  final List<Tour> tours;
+  final TimelineEntry tour;
   final BoxConstraints constraints;
   final int numberColumns;
   final int startYear;
-  final int endYear;
   final bool isVertical;
+  final GestureTapCallback? onTap;
 
   const TimelineItem(
-      {Key? key,
-      required this.tour,
-      required this.constraints,
-      required this.numberColumns,
-      required this.startYear,
-      required this.endYear,
-      required this.tours,
-      required this.isVertical})
+      {Key? key, required this.tour, required this.constraints, required this.numberColumns, required this.startYear, required this.isVertical, this.onTap})
       : super(key: key);
 
   @override
@@ -31,7 +21,7 @@ class TimelineItem extends StatelessWidget {
       width: calculateWidth(),
       height: calculateHeight(),
       child: GestureDetector(
-        onTap: () => Navigation.goTo(context, TimelineInfo(tour: tour)),
+        onTap: onTap,
         child: Padding(
           padding: isVertical ? EdgeInsets.symmetric(horizontal: numberColumns == 2 ? 30 : 20.0) : EdgeInsets.symmetric(vertical: 16.0),
           child: Container(
@@ -39,10 +29,7 @@ class TimelineItem extends StatelessWidget {
                 ? Align(
                     child: Text(
                       tour.title,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: tour.textColor
-                      ),
+                      style: TextStyle(fontSize: 10, color: tour.textColor),
                       textAlign: TextAlign.center,
                     ),
                     alignment: Alignment.center)
@@ -79,26 +66,24 @@ class TimelineItem extends StatelessWidget {
   //40 is the size of the date container
   double itemPosition() {
     if (numberColumns > 5) {
-      return isVertical? constraints.maxWidth / 5 * (tour.columnId) + 40 : (constraints.maxHeight / 5 * (tour.columnId) + 40);
+      return isVertical ? constraints.maxWidth / 5 * (tour.columnId) + 40 : (constraints.maxHeight / 5 * (tour.columnId) + 40);
     }
 
-    double itemWidth = (constraints.maxWidth - 40) / (numberColumns);
-
     return isVertical
-        ? (40 + ((constraints.maxWidth-40)/(numberColumns) - itemWidth/2)) * (tour.columnId) + 40
-        : ((constraints.maxHeight - constraints.maxHeight/5 - 40) / numberColumns) * tour.columnId + 40;
+        ? (((constraints.maxWidth - 40) / (numberColumns))) * (tour.columnId) + 40
+        : ((constraints.maxHeight - constraints.maxHeight / 5 - 40) / numberColumns) * tour.columnId + 40;
   }
 
   double calculateWidth() {
-    if(numberColumns > 5){
-      return isVertical ? ((constraints.maxWidth-40) / 5) : (tour.endYear - tour.startYear).toDouble();
+    if (numberColumns > 5) {
+      return isVertical ? ((constraints.maxWidth - 40) / 5) : (tour.endYear - tour.startYear).toDouble();
     }
     return isVertical ? (constraints.maxWidth - 40) / (numberColumns) : (tour.endYear - tour.startYear).toDouble();
   }
 
   double calculateHeight() {
-    if(numberColumns > 5){
-      return isVertical ? (tour.endYear - tour.startYear).toDouble() : ((constraints.maxHeight -40)/ 5);
+    if (numberColumns > 5) {
+      return isVertical ? (tour.endYear - tour.startYear).toDouble() : ((constraints.maxHeight - 40) / 5);
     }
 
     return isVertical

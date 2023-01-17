@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:timeline_poi/data/tour_hint.dart';
 
-class Tour {
+class TimelineEntry {
 
   final String title;
   final String id;
@@ -12,10 +11,9 @@ class Tour {
   final Color color;
   final Color textColor;
   int columnId;
-  final List<TourHint>? hints;
 
 
-  Tour({
+  TimelineEntry({
     required this.title,
     required this.id,
     required this.startYear,
@@ -25,7 +23,6 @@ class Tour {
     this.color = Colors.blue,
     this.textColor = Colors.black,
     this.columnId = 0,
-    this.hints,
   });
 
 }

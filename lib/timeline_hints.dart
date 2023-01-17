@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'data/tour_hint.dart';
+import 'data/hint.dart';
 
 class TimelineHint extends StatefulWidget {
-  final TourHint hint;
+  final Hint hint;
   final int startYear;
   final ScrollController scrollController;
   final int iconSize;
@@ -21,13 +21,13 @@ class _TimelineHintState extends State<TimelineHint> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        top: (widget.hint.year.toDouble() + widget.startYear.abs() + 400).toDouble() + 12,
+        top: (widget.hint.year + widget.startYear.abs()) + 12,
         left: 35,
         child: Column(
           children: [
             AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              width: isHintVisible() ? widget.iconSize.toDouble() * 1.1: widget.iconSize.toDouble() / 2,
+              width: isHintVisible() ? widget.iconSize * 1.1: widget.iconSize.toDouble() / 2,
               curve: Curves.easeOut,
               child: isHintVisible()
                   ? Icon(Icons.lightbulb, color: Colors.yellow)

@@ -4,44 +4,52 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/services.dart';
 import 'package:timeline_poi/timeline_hints.dart';
 import 'package:timeline_poi/timeline_hints_description.dart';
+import 'package:timeline_poi/timeline_info.dart';
 import 'package:timeline_poi/timeline_item.dart';
 import 'package:timeline_poi/timeline_map.dart';
-import 'data/tour.dart';
+import 'Navigation.dart';
+import 'data/timeline_entry.dart';
+import 'data/hint.dart';
 
-class MyTimeline extends StatefulWidget {
-  final List<Tour> tours;
+class TimelineWidget extends StatefulWidget {
+  final List<TimelineEntry> tours;
+  final List<Hint>? hints;
   final int numberColumns;
+  final int maxScreenColumns;
   final int startYear;
   final int endYear;
   final bool isVertical;
+  final bool displayMap;
 
-  const MyTimeline({
+  const TimelineWidget({
     Key? key,
     required this.tours,
     this.numberColumns = 5,
+    this.maxScreenColumns = 5,
     this.startYear = -400,
     this.endYear = 2000,
     this.isVertical = false,
+    this.displayMap = true,
+    this.hints,
   }) : super(key: key);
 
   @override
-  State<MyTimeline> createState() => _MyTimelineState();
+  State<TimelineWidget> createState() => _TimelineWidgetState();
 }
 
-class _MyTimelineState extends State<MyTimeline> {
+class _TimelineWidgetState extends State<TimelineWidget> {
   final ScrollController scrollController = ScrollController();
   final ScrollController scrollControllerVertical = ScrollController();
   late int currentYear;
   late String textYear;
   late double dateOffset;
-  late AnimationController _animationController;
   Color baseColor = Colors.black;
 
   @override
   void initState() {
     //Sets the default text displaying the current year
-    currentYear = widget.startYear;
-    currentYear > 0 ? textYear = "${currentYear.abs().toString()} CE" : textYear = "${currentYear.abs().toString()} BCE";
+    _textCurrentYear(null);
+
     scrollController.addListener(_onSlide); //Subscribes the scrollController to the _onSlide method
     scrollControllerVertical.addListener(_onSlide);
     widget.isVertical
@@ -53,14 +61,18 @@ class _MyTimelineState extends State<MyTimeline> {
 
   void _onSlide() {
     //set a new State in the timeline when the user slides the timeline
-    setState(_textCurrentYear);
+    _textCurrentYear(scrollController);
     setState(_dateOffset);
   }
 
-  void _textCurrentYear() {
+  void _textCurrentYear(ScrollController? scrollController) {
     //Calculates the current year based on the scrollController position
-    currentYear = (scrollController.offset * 1).round() + widget.startYear;
-    currentYear > 0 ? textYear = "${currentYear.abs().toString()} CE" : textYear = "${currentYear.abs().toString()} BCE";
+    if (scrollController == null) {
+      textYear = "${widget.startYear.abs().toString()} ${widget.startYear > 0 ? "CE" : "BCE"}";
+    } else {
+      currentYear = (scrollController!.offset).round() + widget.startYear;
+      textYear = "${currentYear.abs().toString()} ${currentYear > 0 ? "CE" : "BCE"}";
+    }
   }
 
   void _dateOffset() {
@@ -76,29 +88,10 @@ class _MyTimelineState extends State<MyTimeline> {
         children: [
           GestureDetector(
             onPanUpdate: (details) {
-              setState(() {
-                scrollController.position
-                    .moveTo(widget.isVertical ? scrollController.position.pixels - details.delta.dy : scrollController.position.pixels - details.delta.dx);
-                scrollControllerVertical.position.moveTo(widget.isVertical
-                    ? scrollControllerVertical.position.pixels - details.delta.dx
-                    : scrollControllerVertical.position.pixels - details.delta.dy);
-              });
+              updateGesture(details);
             },
             onPanEnd: (details) {
-              scrollController.position.animateTo(
-                widget.isVertical
-                    ? scrollController.offset - details.velocity.pixelsPerSecond.dy/5
-                    : scrollController.offset - details.velocity.pixelsPerSecond.dx/5,
-                duration: const Duration(milliseconds: 1000),
-                curve: Curves.easeOutCubic,
-              );
-              scrollControllerVertical.position.animateTo(
-                widget.isVertical
-                    ? scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx/5
-                    : scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dy/5 ,
-                duration: const Duration(milliseconds: 1000),
-                curve: Curves.easeOutCubic,
-              );
+              endGesture(details);
             },
             child: SingleChildScrollView(
                 scrollDirection: widget.isVertical ? Axis.vertical : Axis.horizontal,
@@ -117,22 +110,17 @@ class _MyTimelineState extends State<MyTimeline> {
                         for (var tour in widget.tours)
                           TimelineItem(
                             tour: tour,
-                            tours: widget.tours,
                             constraints: constraints,
                             numberColumns: widget.numberColumns,
                             startYear: widget.startYear,
-                            endYear: widget.endYear,
                             isVertical: widget.isVertical,
+                            onTap: () => Navigation.goTo(context, TimelineInfo(tour: tour)),
                           ),
-                        for (var tour in widget.tours)
-                          if (tour.hints != null)
-                            for (var hint in tour.hints!)
-                              TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
-                        for (var tour in widget.tours)
-                          if (tour.hints != null)
-                            for (var hint in tour.hints!)
-                              TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
-                        for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) dateList(i, constraints),
+                        for (var hint in widget.hints ?? [])
+                          TimelineHint(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                        for (var hint in widget.hints ?? [])
+                          TimelineHintDescription(hint: hint, startYear: widget.startYear, scrollController: scrollController, constraints: constraints),
+                        for (int i = 0; i <= widget.endYear - widget.startYear; i += 100) buildDateListWidget(i, constraints),
                       ],
                     ),
                   ),
@@ -140,7 +128,7 @@ class _MyTimelineState extends State<MyTimeline> {
           ),
           Container(
             margin: widget.isVertical ? EdgeInsets.only(top: constraints.maxHeight / 2) : EdgeInsets.only(left: constraints.maxWidth / 2),
-            child: transparentDottedLine(),
+            child: buildDottedLineWidget(),
           ),
           Positioned(
             child: Text(
@@ -150,28 +138,30 @@ class _MyTimelineState extends State<MyTimeline> {
             top: widget.isVertical ? constraints.maxHeight / 2 - 40 : constraints.maxHeight * 0.8 - 40,
             left: widget.isVertical ? constraints.maxWidth * 0.8 : constraints.maxWidth / 2 - 40,
           ),
-          Positioned(
-            child: TimelineMap(
-              constraints: constraints,
-              scrollController: scrollController,
-              scrollControllerVertical: scrollControllerVertical,
-              totalYears: widget.endYear - widget.startYear,
-              tours: widget.tours,
-              numberColumns: widget.numberColumns,
-              startYear: widget.startYear,
-              isVertical: widget.isVertical,
-              totalHeight: height,
-              totalWidth: width,
-            ),
-            bottom: 0,
-          )
+          if (widget.displayMap)
+            Positioned(
+              child: TimelineMap(
+                constraints: constraints,
+                scrollController: scrollController,
+                scrollControllerVertical: scrollControllerVertical,
+                totalYears: widget.endYear - widget.startYear,
+                tours: widget.tours,
+                numberColumns: widget.numberColumns,
+                maxScreenColumns: widget.maxScreenColumns,
+                startYear: widget.startYear,
+                isVertical: widget.isVertical,
+                totalHeight: height,
+                totalWidth: width,
+              ),
+              bottom: 0,
+            )
         ],
       );
     }));
   }
 
   //Used to set the years in the timeline
-  Widget dateList(int i, BoxConstraints constraints) {
+  Widget buildDateListWidget(int i, BoxConstraints constraints) {
     return Positioned(
         top: widget.isVertical ? i + constraints.maxHeight / 2 : dateOffset,
         left: widget.isVertical ? dateOffset : i + constraints.maxWidth / 2,
@@ -189,7 +179,7 @@ class _MyTimelineState extends State<MyTimeline> {
   }
 
   //Transparent dotted line in the middle of the screen
-  Widget transparentDottedLine() {
+  Widget buildDottedLineWidget() {
     return DottedLine(
       direction: widget.isVertical ? Axis.horizontal : Axis.vertical,
       lineLength: double.infinity,
@@ -199,24 +189,56 @@ class _MyTimelineState extends State<MyTimeline> {
     );
   }
 
+  void updateGesture(DragUpdateDetails details) {
+    setState(() {
+      scrollController.position
+          .moveTo(widget.isVertical ? scrollController.position.pixels - details.delta.dy : scrollController.position.pixels - details.delta.dx);
+      scrollControllerVertical.position.moveTo(widget.isVertical
+          ? scrollControllerVertical.position.pixels - details.delta.dx
+          : scrollControllerVertical.position.pixels - details.delta.dy);
+    });
+  }
+
+  void endGesture(DragEndDetails details){
+    scrollController.position.animateTo(
+      widget.isVertical
+          ? scrollController.offset - details.velocity.pixelsPerSecond.dy / 5
+          : scrollController.offset - details.velocity.pixelsPerSecond.dx / 5,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutCubic,
+    );
+    scrollControllerVertical.position.animateTo(
+      widget.isVertical
+          ? scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dx / 5
+          : scrollControllerVertical.offset - details.velocity.pixelsPerSecond.dy / 5,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   double calculateWidth(BoxConstraints constraints) {
-    if (widget.numberColumns > 5) {
-      return widget.isVertical ? (constraints.maxWidth / 5) * (widget.numberColumns) + 40 : (widget.endYear - widget.startYear + constraints.maxWidth);
+    if (widget.numberColumns > widget.maxScreenColumns) {
+      return widget.isVertical
+          ? (constraints.maxWidth / widget.maxScreenColumns) * (widget.numberColumns) + 40
+          : (widget.endYear - widget.startYear + constraints.maxWidth);
     }
     return widget.isVertical ? constraints.maxWidth : (widget.endYear - widget.startYear + constraints.maxWidth);
   }
 
   double calculateHeight(BoxConstraints constraints) {
-    if (widget.numberColumns <= 5) {
+    if (widget.numberColumns <= widget.maxScreenColumns) {
       return (widget.isVertical ? widget.endYear - widget.startYear + constraints.maxHeight : constraints.maxHeight);
     }
     return widget.isVertical
         ? (widget.endYear - widget.startYear + constraints.maxHeight)
-        : (constraints.maxHeight / 5) * (widget.numberColumns) + constraints.maxHeight / 5 + 40;
+        : (constraints.maxHeight / widget.maxScreenColumns) * (widget.numberColumns) + constraints.maxHeight / widget.maxScreenColumns + 40;
   }
 
   void dispose() {
+    scrollController.removeListener(_onSlide);
+    scrollControllerVertical.removeListener(_onSlide);
     scrollController.dispose();
+    scrollControllerVertical.dispose();
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,

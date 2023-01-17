@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'data/tour_hint.dart';
+import 'data/hint.dart';
 
 class TimelineHintDescription extends StatefulWidget {
-  final TourHint hint;
+  final Hint hint;
   final int startYear;
   final ScrollController scrollController;
   final BoxConstraints constraints;

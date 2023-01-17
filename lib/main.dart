@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timeline_poi/timeline.dart';
-import 'package:timeline_poi/data/tour.dart';
-import 'package:timeline_poi/data/tour_hint.dart';
+import 'package:timeline_poi/data/timeline_entry.dart';
+import 'package:timeline_poi/data/hint.dart';
 import 'package:collection/collection.dart';
 
 import 'Navigation.dart';
@@ -34,55 +34,66 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late List<Tour> tours;
-  late List<TourHint> hints;
+  late List<TimelineEntry> tours;
+  late List<Hint> hints;
+
+  int startYear = 0;
+  int endYear = 0;
 
   @override
   void initState() {
     super.initState();
 
     hints = [
-      TourHint(
+      Hint(
           year: 0,
           description:
               "Cet évènement est phénoménal, je ne peux pas y croire ! Le texte est particulièrement long pour voir comment réagit le widget. Aux premiers abords, il réagit relativement bien puisque sa taille augmente en fonction de la quantité de texte !"),
-      TourHint(year: 100, description: "The second hint"),
-      TourHint(year: 200, description: "The third hint"),
-      TourHint(year: 300, description: "The fourth hint"),
-      TourHint(year: 400, description: "The fifth hint"),
-      TourHint(year: 2001, description: "La naissance du roi"),
+      Hint(year: 100, description: "The second hint"),
+      Hint(year: 200, description: "The third hint"),
+      Hint(year: 300, description: "The fourth hint"),
+      Hint(year: 400, description: "The fifth hint"),
     ];
 
+
     tours = [
-      Tour(
+      TimelineEntry(
           title: "Tour numéro 1",
           id: "1",
           startYear: -150,
           endYear: 150,
           color: Colors.red,
           imageUri: "images/logoOrpheo.png",
-          description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture",
-          hints: null),
-      Tour(title: "same tour", id: "1", startYear: -150, endYear: 150, color: Colors.red, imageUri: "images/logoOrpheo.png"),
+          description: "Bonjour je suis une description hasardeuse au possible, merci de votre lecture",),
+      TimelineEntry(title: "same tour", id: "1", startYear: -150, endYear: 150, color: Colors.red, imageUri: "images/logoOrpheo.png"),
 
-      Tour(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
-      Tour(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
-      Tour(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
-      Tour(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
-      Tour(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
-      Tour(title: "Tour numéro 7", id: "7", startYear: 540, endYear: 700, color: Colors.brown),
-      Tour(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
-      Tour(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
-      /*Tour(title: "Tour numéro 10", id: "10", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 11", id: "11", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 12", id: "12", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 13", id: "13", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 14", id: "14", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 15", id: "15", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 16", id: "16", startYear: 600, endYear: 800, color: Colors.yellow),
-      Tour(title: "Tour numéro 17", id: "17", startYear: 600, endYear: 800, color: Colors.yellow),*/
+      TimelineEntry(title: "Tour numéro 2", id: "2", startYear: 200, endYear: 300, color: Colors.green),
+      TimelineEntry(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
+      TimelineEntry(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
+      TimelineEntry(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
+      /*TimelineEntry(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 7", id: "7", startYear: 540, endYear: 700, color: Colors.brown),
+      TimelineEntry(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
+      TimelineEntry(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
+      TimelineEntry(title: "Tour numéro 10", id: "10", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 11", id: "11", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 12", id: "12", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 13", id: "13", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 14", id: "14", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 15", id: "15", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 16", id: "16", startYear: 600, endYear: 800, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 17", id: "17", startYear: 600, endYear: 800, color: Colors.yellow),*/
 
     ];
+
+    for (var tour in tours){
+      if(tour.startYear < startYear){
+        startYear = tour.startYear;
+      }
+      if(tour.endYear > endYear){
+        endYear = tour.endYear;
+      }
+    }
 
     setColumnIds(tours);
   }
@@ -100,10 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
                 onPressed: () => Navigation.goTo(
                     context,
-                    MyTimeline(
+                    TimelineWidget(
                       tours: tours,
                       numberColumns: maxColumn(tours),
+                      maxScreenColumns: 5,
                       isVertical: MediaQuery.of(context).orientation == Orientation.portrait ? true : false,
+                      startYear: startYear-100,
+                      endYear: endYear+100,
                     )),
                 child: const Text('Try the timeline')),
           ],
@@ -113,11 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //Sorts the table by their startYear and sets the columnId so they don't overlap
-  void setColumnIds(List<Tour> tours) {
+  void setColumnIds(List<TimelineEntry> tours) {
     tours.sort((a, b) => a.startYear.compareTo(b.startYear));
     for (int i = 0; i <= tours.length - 1; i++) {
       int indexToSet = 0;
-      List<Tour> concurrent = [];
+      List<TimelineEntry> concurrent = [];
       for (int k = 0; k <= i - 1; k++) {
         //Look for concurrent tours (tours that will overlap)
         if (tours[k].endYear >= tours[i].startYear) {
@@ -133,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //Look for the maximum columnId in the list of tours
-  int maxColumn(List<Tour> tours) {
+  int maxColumn(List<TimelineEntry> tours) {
     int maxColumnId = 0;
     for (int i = 0; i <= tours.length - 1; i++) {
       if (tours[i].columnId > maxColumnId) {
