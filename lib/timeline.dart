@@ -52,9 +52,6 @@ class _TimelineWidgetState extends State<TimelineWidget> {
 
     scrollController.addListener(_onSlide); //Subscribes the scrollController to the _onSlide method
     scrollControllerVertical.addListener(_onSlide);
-    widget.isVertical
-        ? SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-        : SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     dateOffset = 0;
     super.initState();
   }
@@ -112,6 +109,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                             tour: tour,
                             constraints: constraints,
                             numberColumns: widget.numberColumns,
+                            maxScreenColumns: widget.maxScreenColumns,
                             startYear: widget.startYear,
                             isVertical: widget.isVertical,
                             onTap: () => Navigation.goTo(context, TimelineInfo(tour: tour)),
@@ -231,7 +229,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     }
     return widget.isVertical
         ? (widget.endYear - widget.startYear + constraints.maxHeight)
-        : (constraints.maxHeight / widget.maxScreenColumns) * (widget.numberColumns) + constraints.maxHeight / widget.maxScreenColumns + 40;
+        : ((constraints.maxHeight) / widget.maxScreenColumns) * (widget.numberColumns) - constraints.maxHeight/5 + 40;
   }
 
   void dispose() {
@@ -239,13 +237,6 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     scrollControllerVertical.removeListener(_onSlide);
     scrollController.dispose();
     scrollControllerVertical.dispose();
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
 
     super.dispose();
   }

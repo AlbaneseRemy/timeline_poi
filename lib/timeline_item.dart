@@ -5,12 +5,13 @@ class TimelineItem extends StatelessWidget {
   final TimelineEntry tour;
   final BoxConstraints constraints;
   final int numberColumns;
+  final int maxScreenColumns;
   final int startYear;
   final bool isVertical;
   final GestureTapCallback? onTap;
 
   const TimelineItem(
-      {Key? key, required this.tour, required this.constraints, required this.numberColumns, required this.startYear, required this.isVertical, this.onTap})
+      {Key? key, required this.tour, required this.constraints, required this.numberColumns, required this.startYear, required this.isVertical, this.onTap, this.maxScreenColumns = 5})
       : super(key: key);
 
   @override
@@ -65,29 +66,32 @@ class TimelineItem extends StatelessWidget {
   //Determines on which column the item should be placed
   //40 is the size of the date container
   double itemPosition() {
-    if (numberColumns > 5) {
-      return isVertical ? constraints.maxWidth / 5 * (tour.columnId) + 40 : (constraints.maxHeight / 5 * (tour.columnId) + 40);
+    if (numberColumns > maxScreenColumns) {
+      return isVertical ? constraints.maxWidth / maxScreenColumns * (tour.columnId) + 40 :
+      ((constraints.maxHeight - constraints.maxHeight/5 - 40) / maxScreenColumns * (tour.columnId) + 40);
     }
 
     return isVertical
         ? (((constraints.maxWidth - 40) / (numberColumns))) * (tour.columnId) + 40
-        : ((constraints.maxHeight - constraints.maxHeight / 5 - 40) / numberColumns) * tour.columnId + 40;
+        : ((constraints.maxHeight - constraints.maxHeight / maxScreenColumns - 40) / numberColumns) * tour.columnId + 40;
   }
 
   double calculateWidth() {
-    if (numberColumns > 5) {
-      return isVertical ? ((constraints.maxWidth - 40) / 5) : (tour.endYear - tour.startYear).toDouble();
+    if (numberColumns > maxScreenColumns) {
+      return isVertical ? ((constraints.maxWidth - 40) / maxScreenColumns) : (tour.endYear - tour.startYear).toDouble();
     }
     return isVertical ? (constraints.maxWidth - 40) / (numberColumns) : (tour.endYear - tour.startYear).toDouble();
   }
 
   double calculateHeight() {
-    if (numberColumns > 5) {
-      return isVertical ? (tour.endYear - tour.startYear).toDouble() : ((constraints.maxHeight - 40) / 5);
+    if (numberColumns > maxScreenColumns) {
+      return isVertical ? (tour.endYear - tour.startYear).toDouble() :
+      //((constraints.maxHeight - 40 - constraints.maxHeight/5) / maxScreenColumns);
+      (constraints.maxHeight - constraints.maxHeight/5 - 40) / maxScreenColumns;
     }
 
     return isVertical
         ? (tour.endYear - tour.startYear).toDouble()
-        : constraints.maxHeight / (numberColumns + 1) - (constraints.maxHeight / 10) / (numberColumns);
+        : constraints.maxHeight / (numberColumns+1) - (constraints.maxHeight / 10) / (numberColumns);
   }
 }
