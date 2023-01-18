@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:timeline_poi/timeline.dart';
 import 'package:timeline_poi/data/timeline_entry.dart';
 import 'package:timeline_poi/data/hint.dart';
@@ -36,13 +37,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late List<TimelineEntry> tours;
   late List<Hint> hints;
+  late bool vertical;
 
   int startYear = 0;
   int endYear = 0;
+  int _currentValue = 5;
 
   @override
   void initState() {
     super.initState();
+    vertical = true;
 
     hints = [
       Hint(
@@ -71,10 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
       TimelineEntry(title: "Tour numéro 3", id: "3", startYear: 300, endYear: 600, color: Colors.purple),
       TimelineEntry(title: "Tour numéro 4", id: "4", startYear: 800, endYear: 1200, color: Colors.pink),
       TimelineEntry(title: "Tour numéro 5", id: "5", startYear: 350, endYear: 450, color: Colors.blue, imageUri: "images/logoOrpheo.png"),
-      /*TimelineEntry(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
+      TimelineEntry(title: "Tour numéro 6", id: "6", startYear: 500, endYear: 600, color: Colors.yellow),
       TimelineEntry(title: "Tour numéro 7", id: "7", startYear: 540, endYear: 700, color: Colors.brown),
       TimelineEntry(title: "Tour numéro 8", id: "8", startYear: 540, endYear: 700, color: Colors.white),
-      TimelineEntry(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
+      /*TimelineEntry(title: "Tour numéro 9", id: "9", startYear: 600, endYear: 750, color: Colors.orange),
       TimelineEntry(title: "Tour numéro 10", id: "10", startYear: 600, endYear: 800, color: Colors.yellow),
       TimelineEntry(title: "Tour numéro 11", id: "11", startYear: 600, endYear: 800, color: Colors.yellow),
       TimelineEntry(title: "Tour numéro 12", id: "12", startYear: 600, endYear: 800, color: Colors.yellow),
@@ -108,14 +112,29 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+            Text("Activer le mode vertical ?"),
+            Checkbox(value: vertical, onChanged: (bool? value){ setState(() {
+              vertical = value!;
+            });}
+            ),
+            NumberPicker(
+              value: _currentValue,
+              axis: Axis.vertical,
+              minValue: 1,
+              maxValue: 10,
+              onChanged: (value) => setState(() => _currentValue = value),
+            ),
+            Text('Nombre maximum de colonnes : $_currentValue'),
+            Padding(padding: EdgeInsets.all(10)),
             ElevatedButton(
                 onPressed: () => Navigation.goTo(
                     context,
                     TimelineWidget(
                       tours: tours,
                       numberColumns: maxColumn(tours),
-                      maxScreenColumns: 5,
-                      isVertical: MediaQuery.of(context).orientation == Orientation.portrait ? true : false,
+                      maxScreenColumns: _currentValue,
+                      isVertical: vertical,
                       startYear: startYear-100,
                       endYear: endYear+100,
                     )),
