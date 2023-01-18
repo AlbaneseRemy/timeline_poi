@@ -224,12 +224,12 @@ class _TimelineWidgetState extends State<TimelineWidget> {
   }
 
   double calculateHeight(BoxConstraints constraints) {
-    if (widget.numberColumns <= widget.maxScreenColumns) {
-      return (widget.isVertical ? widget.endYear - widget.startYear + constraints.maxHeight : constraints.maxHeight);
+    if (widget.numberColumns > widget.maxScreenColumns) {
+      return widget.isVertical
+          ? (widget.endYear - widget.startYear + constraints.maxHeight)
+          : ((constraints.maxHeight) / widget.maxScreenColumns) * (widget.numberColumns);
     }
-    return widget.isVertical
-        ? (widget.endYear - widget.startYear + constraints.maxHeight)
-        : ((constraints.maxHeight) / widget.maxScreenColumns) * (widget.numberColumns) - constraints.maxHeight/5 + 40;
+    return (widget.isVertical ? widget.endYear - widget.startYear + constraints.maxHeight : constraints.maxHeight);
   }
 
   void dispose() {
